@@ -40,7 +40,7 @@ class BEA_ACF_For_Polylang {
 	 * @return mixed|string|void
 	 */
 	public static function set_default_value( $value, $post_id, $field ) {
-		if ( is_admin() || false === strpos( $post_id, 'options' ) || ! function_exists( 'pll_current_language' ) || ! empty( $value ) ) {
+		if ( is_admin() || false === strpos( $post_id, 'options' ) || ! function_exists( 'pll_current_language' ) || ! ( empty( $value ) && $value === false ) ) {
 			return $value;
 		}
 
