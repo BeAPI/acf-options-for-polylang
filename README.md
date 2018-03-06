@@ -17,7 +17,7 @@ This plugin is storing a value for each language into database. <b>That means at
 - [WordPress](https://wordpress.org/) 4.7+
 - Tested up to 4.9.1
 - PHP 5.6
-- [Advanced Custom Fields](https://www.advancedcustomfields.com/pro)
+- [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) version 5.6 minimum
 - [Polylang](https://polylang.pro/)
 
 # Installation
