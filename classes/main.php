@@ -181,6 +181,9 @@ class Main {
 	 * @return bool
 	 */
 	function is_option_page( $post_id ) {
+		if ( is_object($post_id) ) {
+			return false;
+		}
 		if ( false !== strpos( $post_id, 'options' ) ) {
 			return true;
 		}
