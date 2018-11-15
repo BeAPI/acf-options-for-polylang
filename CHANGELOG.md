@@ -1,13 +1,18 @@
 # Changelog
 
+## 1.1.4 - 13 Nov 2018
+* Refactor by adding the Helpers class
+* FEATURE [#26](https://github.com/BeAPI/acf-options-for-polylang/issues/26) : allow to precise to show or hide default values for a specific option page
+* FEATURE [#21](https://github.com/BeAPI/acf-options-for-polylang/pull/21) : handle custom option id
+
 ## 1.1.3 - 2 Aug 2018
-* [#23](https://github.com/BeAPI/acf-options-for-polylang/pull/23) : Requirement to php5.6 whereas namespace are 5.3
+* FEATURE [#23](https://github.com/BeAPI/acf-options-for-polylang/pull/23) : requirement to php5.6 whereas namespace are 5.3
 
 ## 1.1.2 - 31 Jul 2018
-* [#22](https://github.com/BeAPI/acf-options-for-polylang/pull/22) : Fix error with repeater fields default values
+* FIX [#22](https://github.com/BeAPI/acf-options-for-polylang/pull/22) : error with repeater fields default values
 
 ## 1.1.1 - 9 Mai 2018
-* [#15](https://github.com/BeAPI/acf-options-for-polylang/issues/15) : fix way requirements are checked to trigger on front / admin.
+* FIX [#15](https://github.com/BeAPI/acf-options-for-polylang/issues/15) : way requirements are checked to trigger on front / admin
 
 ## 1.1.0 - Mar 2018
 * True (complet) plugin.

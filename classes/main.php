@@ -77,16 +77,21 @@ class Main {
 	 * @return mixed|string|void
 	 */
 	public function get_default_value( $value, $post_id, $field ) {
-		if ( is_admin() || ! self::is_option_page( $post_id ) ) {
+		if ( is_admin() || ! Helpers::is_option_page( $post_id ) ) {
 			return $value;
 		}
 
+		$original_post_id = Helpers::original_option_id( $post_id );
+
 		/**
-		 * Activate or deactivate the default value (all languages)
+		 * Activate or deactivate the default value (all languages) for the given post id
 		 *
-		 * @since 1.0.2
+		 * @param bool   $show_default     : whatever to show default for the given post id
+		 * @param string $original_post_id : the original post id without lang attributes
+		 *
+		 * @since 1.0.4
 		 */
-		if ( ! apply_filters( 'bea.aofp.get_default', true ) ) {
+		if ( ! apply_filters( 'bea.aofp.get_default', true, $original_post_id ) ) {
 			return $value;
 		}
 
@@ -124,16 +129,8 @@ class Main {
 		remove_filter( 'acf/settings/current_language', [ $this, 'set_current_site_lang' ] );
 		remove_filter( 'acf/load_value', [ $this, 'get_default_value' ] );
 
-		/**
-		 * Generate the all language option's post_id key
-		 *
-		 * @since  1.0.2
-		 * @author Maxime CULEA
-		 */
-		$all_language_post_id = str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $post_id );
-
 		// Get the "All language" value
-		$value = acf_get_metadata( $all_language_post_id, $field['name'] );
+		$value = acf_get_metadata( $original_post_id, $field['name'] );
 
 		/**
 		 * Re-add deleted filters
@@ -205,14 +202,17 @@ class Main {
 	 */
 	function set_options_id_lang( $future_post_id, $original_post_id ) {
 		// Only on custom post id option page
-		if ( ! self::is_option_page( $original_post_id ) ) {
+		if ( ! Helpers::is_option_page( $original_post_id ) ) {
 			return $future_post_id;
 		}
 
-		$dl = acf_get_setting( 'default_language' );
-		$cl = acf_get_setting( 'current_language' );
-		if ( $cl && $cl !== $dl ) {
-			$future_post_id .= '_' . $cl;
+		// If no custom acf key, no need while already impacted by Polylang locale
+		if ( 'options' !== Helpers::original_option_id( $future_post_id ) ) {
+			$dl = acf_get_setting( 'default_language' );
+			$cl = acf_get_setting( 'current_language' );
+			if ( $cl && $cl !== $dl ) {
+				$future_post_id .= '_' . $cl;
+			}
 		}
 
 		return $future_post_id;

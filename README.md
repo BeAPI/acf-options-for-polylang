@@ -61,9 +61,28 @@ Please refer to the [contributing guidelines](.github/CONTRIBUTING.md) to increa
 
 If you identify any errors or have an idea for improving the plugin, feel free to open an [issue](../../issues/new). Please provide as much info as needed in order to help us resolving / approve your request.
 
-## For developpers
+## For developers
 
-The plugin is designed to get the Polylang "All languages" value if the current lang one is empty. But if you are not interested about this behaviour, you can programmatically deactivate it using the following filter by setting to false : `bea.aofp.get_default`.
+The plugin is designed to get the Polylang "All languages" value if the current lang one is empty. But if you are not interested about this behaviour, you can programmatically deactivate it using the following filter by setting to false.
+
+### For all ACF Options pages
+
+```
+<?php add_filter( 'bea.aofp.get_default', '__return_false' );
+```
+
+### For just one ACF Options page
+
+```
+<?php add_filter( 'bea.aofp.get_default', function( $show_default, $post_id ) {
+	if ( 'my_custom_acf_option_post_id' === $post_id ) {
+		// Custom condition for the wanted post id ACF Option page
+		return false;
+	}
+
+	return $show_default;
+}, 10, 2 );
+```
 
 # Who ?
 
