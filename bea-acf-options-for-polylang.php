@@ -42,6 +42,7 @@ define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_URL', plugin_dir_url( __FILE__ ) );
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BEA_ACF_OPTIONS_MAIN_FILE_DIR', __FILE__ );
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_PLUGIN_DIRNAME', basename( rtrim( dirname( __FILE__ ), '/' ) ) );
+define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_UPDATE_CHECKER_DIR', BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'plugin-update-checker/' );
 
 // Check PHP min version
 if ( version_compare( PHP_VERSION, BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION, '<' ) ) {
@@ -64,3 +65,12 @@ function bea_acf_options_for_polylang_load() {
 
 	\BEA\ACF_Options_For_Polylang\Main::get_instance();
 }
+
+// Plugin update checker
+require_once BEA_ACF_OPTIONS_FOR_POLYLANG_UPDATE_CHECKER_DIR . 'plugin-update-checker.php';
+
+$update_checker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/BeAPI/acf-options-for-polylang/',
+	__FILE__,
+	basename( __FILE__ )
+);
