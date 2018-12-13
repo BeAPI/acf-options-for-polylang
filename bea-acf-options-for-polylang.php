@@ -71,6 +71,6 @@ require_once BEA_ACF_OPTIONS_FOR_POLYLANG_UPDATE_CHECKER_DIR . 'plugin-update-ch
 
 $update_checker = Puc_v4_Factory::buildUpdateChecker(
 	'https://github.com/BeAPI/acf-options-for-polylang/',
-	__FILE__,
-	basename( __FILE__ )
+	BEA_ACF_OPTIONS_MAIN_FILE_DIR,
+	basename( BEA_ACF_OPTIONS_MAIN_FILE_DIR )
 );
