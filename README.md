@@ -10,7 +10,7 @@ We are here to save your life ! Once this plugin is activated, you will be able 
 
 # How ?
 
-This plugin is storing a value for each language into database. <b>That means at activation, all data will not be anymore available, but still in database.</b>Then Polylang's lang is used to get the values from the DB. Simply contribute your option page by selecting the Polylang's language from admin flags ui.
+This plugin creates an _additional_ Options Page field for each field for which there is a translation and displays these fields in the front end _instead of_ the All Languages value for that field. Localized (regional) Options Pages are accessed via the Polylang Admin Flags UI ("Show All Languages") Filter in the WP Admin Bar. The <All Languages> values for the fields will still be stored in the database (as well as displayed in the <All Languages> view of the Options Page), but they will only be displayed in the front end if Localized values are not set.
 
 # Requirements
 
