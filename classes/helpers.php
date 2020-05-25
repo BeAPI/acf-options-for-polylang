@@ -72,6 +72,10 @@ class Helpers {
 	 * @since  1.0.2
 	 */
 	public static function get_option_page_ids() {
+		if ( ! function_exists( 'acf_options_page' ) ) {
+			return [];
+		}
+
 		return wp_list_pluck( acf_options_page()->get_pages(), 'post_id' );
 	}
 
