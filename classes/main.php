@@ -20,9 +20,6 @@ class Main {
 
 		// Help loading right field for repeaters
 		add_filter( 'acf/load_reference', [ $this, 'get_default_reference' ], 10, 3 );
-
-		// Plugin's own translations
-		add_action( 'init', [ $this, 'init_translations' ] );
 	}
 
 	/**
@@ -172,13 +169,5 @@ class Main {
 		}
 
 		return $future_post_id;
-	}
-
-	/**
-	 * Load the plugin translation
-	 */
-	public function init_translations() {
-		// Load translations
-		load_plugin_textdomain( 'bea-acf-options-for-polylang', false, BEA_ACF_OPTIONS_FOR_POLYLANG_PLUGIN_DIRNAME . '/languages' );
 	}
 }

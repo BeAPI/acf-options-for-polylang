@@ -54,8 +54,14 @@ if ( version_compare( PHP_VERSION, BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION,
 /** Autoload all the things \o/ */
 require_once BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'autoload.php';
 
-add_action( 'plugins_loaded', 'bea_acf_options_for_polylang_load', 100 );
+add_action( 'init', 'bea_acf_options_for_polylang_load', 100 );
 function bea_acf_options_for_polylang_load() {
+	load_plugin_textdomain(
+		'bea-acf-options-for-polylang',
+		false,
+		BEA_ACF_OPTIONS_FOR_POLYLANG_PLUGIN_DIRNAME . '/languages'
+	);
+
 	$requirements = \BEA\ACF_Options_For_Polylang\Requirements::get_instance();
 	if ( ! $requirements->check_requirements() ) {
 		return;
