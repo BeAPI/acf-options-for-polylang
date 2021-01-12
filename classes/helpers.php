@@ -22,7 +22,7 @@ class Helpers {
 			} elseif ( isset( $post_id->roles, $post_id->ID ) ) { // user
 				$post_id = 'user_' . $post_id->ID;
 			} elseif ( isset( $post_id->taxonomy, $post_id->term_id ) ) { // term
-				$post_id = acf_get_term_post_id( $post_id->taxonomy, $post_id->term_id );
+				$post_id = 'term_' . $post_id->term_id;
 			} elseif ( isset( $post_id->comment_ID ) ) { // comment
 				$post_id = 'comment_' . $post_id->comment_ID;
 			} else { // default
