@@ -10,20 +10,16 @@ trait Singleton {
 	protected static $instance;
 
 	/**
-	 * @return self
+	 * @return static
 	 */
 	final public static function get_instance() {
-		if ( is_null( self::$instance ) ) {
-			self::$instance = new static();
-		}
-
-		return self::$instance;
+		return static::$instance ?? static::$instance = new static();
 	}
 
 	/**
 	 * Constructor protected from the outside
 	 */
-	final private function __construct() {
+	private function __construct() {
 		$this->init();
 	}
 
@@ -38,16 +34,36 @@ trait Singleton {
 	/**
 	 * prevent the instance from being cloned
 	 *
-	 * @return void
+	 * @throws \LogicException
 	 */
-	final private function __clone() {
+	final public function __clone() {
+		throw new \LogicException( 'A singleton must not be cloned!' );
+	}
+
+	/**
+	 * prevent from being serialized
+	 *
+	 * @throws \LogicException
+	 */
+	final public function __sleep() {
+		throw new \LogicException( 'A singleton must not be serialized!' );
 	}
 
 	/**
 	 * prevent from being unserialized
 	 *
+	 * @throws \LogicException
+	 */
+	final public function __wakeup() {
+		throw new \LogicException( 'A singleton must not be unserialized!' );
+	}
+
+	/**
+	 * Destruct your instance
+	 *
 	 * @return void
 	 */
-	final private function __wakeup() {
+	final public static function destroy(): void {
+		static::$instance = null;
 	}
 }
