@@ -76,7 +76,7 @@ class Main {
 	 *
 	 */
 	public function get_default_value( $value, $post_id, $field ) {
-		if ( is_admin() || ! Helpers::is_option_page( $post_id ) ) {
+		if ( ! acf_is_ajax() && ( is_admin() || ! Helpers::is_option_page( $post_id ) ) ) {
 			return $value;
 		}
 
