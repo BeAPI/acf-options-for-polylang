@@ -30,7 +30,7 @@ class Main {
 	 *
 	 */
 	public function set_current_site_lang() {
-		return pll_current_language( 'locale' );
+		return ! defined( 'REST_API' ) ? pll_current_language( 'locale' ) : \get_locale();
 	}
 
 	/**
