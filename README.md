@@ -36,9 +36,7 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 - Nothing more, this plugin is ready to use !
 
 ## [Composer](http://composer.rarst.net/)
-
-- Add repository source : `{ "type": "vcs", "url": "https://github.com/BeAPI/acf-options-for-polylang" }`.
-- Include `"bea/acf-options-for-polylang": "dev-master"` in your composer file for last master's commits or a tag released.
+- `composer require wpackagist-plugin/acf-options-for-polylang`
 - Nothing more, this plugin is ready to use !
 
 # What ?
