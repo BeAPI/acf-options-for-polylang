@@ -13,7 +13,11 @@ trait Singleton {
 	 * @return static
 	 */
 	final public static function get_instance() {
-		return static::$instance ?? static::$instance = new static();
+		if ( is_null( self::$instance ) ) {
+			self::$instance = new static();
+		}
+
+		return self::$instance;
 	}
 
 	/**
@@ -63,7 +67,7 @@ trait Singleton {
 	 *
 	 * @return void
 	 */
-	final public static function destroy(): void {
+	final public static function destroy() {
 		static::$instance = null;
 	}
 }
