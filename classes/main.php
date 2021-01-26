@@ -105,9 +105,12 @@ class Main {
 		if ( ! is_null( $value ) ) {
 			if ( is_array( $value ) ) {
 				// Get from array all the not empty strings
-				$is_empty = array_filter( $value, function ( $value_c ) {
-					return '' !== $value_c;
-				} );
+				$is_empty = array_filter(
+					$value,
+					function ( $value_c ) {
+						return '' !== $value_c;
+					}
+				);
 
 				if ( ! empty( $is_empty ) ) { // Not an array of empty values
 					return $value;

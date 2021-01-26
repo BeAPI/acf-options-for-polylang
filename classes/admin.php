@@ -9,7 +9,7 @@ class Admin {
 	use Singleton;
 
 	/**
-	 * Register hookss
+	 * Register hooks
 	 */
 	protected function init() {
 		add_filter(

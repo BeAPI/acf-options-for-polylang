@@ -17,7 +17,7 @@ class Compatibility {
 			return;
 		}
 
-		trigger_error( sprintf( 'ACF Options For Polylang requires PHP version %s or greater to be activated.', BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION ) );
+		trigger_error( sprintf( 'ACF Options For Polylang requires PHP version %s or greater to be activated.', esc_html( BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION ) ) );
 
 		// Deactive self
 		deactivate_plugins( BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'bea-plugin-boilerplate.php' );
