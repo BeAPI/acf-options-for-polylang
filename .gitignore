@@ -56,3 +56,6 @@ fabric.properties
 ### SVN template
 .svn/
 
+# Project
+vendor
+composer.lock

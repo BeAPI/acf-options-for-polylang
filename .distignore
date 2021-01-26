@@ -7,3 +7,5 @@ composer.json
 composer.lock
 LICENSE.md
 README.md
+phpcs.xml
+grumphp.yml

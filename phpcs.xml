@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<ruleset name="ACF-option-for-polylang">
+    <description>Coding Standards for plugin</description>
+
+    <!-- Scan all files in directory -->
+    <file>.</file>
+
+    <!-- Scan only PHP files -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Ignore Composer dependencies -->
+    <exclude-pattern>languages/</exclude-pattern>
+    <exclude-pattern>.wordpress-org/</exclude-pattern>
+    <exclude-pattern>vendor/</exclude-pattern>
+    <exclude-pattern>autoload.php</exclude-pattern>
+
+    <!-- Show colors in console -->
+    <arg value="-colors"/>
+
+    <!-- Show sniff codes in all reports -->
+    <arg value="ns"/>
+
+    <!-- Show progress. -->
+    <arg value="p"/>
+
+    <!-- Set ini. -->
+    <ini name="memory_limit" value="512M"/>
+    <ini name="max_execution_time" value="-1"/>
+
+    <!-- Use WordPress Extra as a base -->
+    <rule ref="WordPress-Extra">
+        <!-- Exclude as we use a custom autoloader. -->
+        <exclude name="WordPress.Files.FileName"/>
+
+        <!-- Exclude as it conflict with @var declaration. -->
+        <exclude name="Squiz.PHP.CommentedOutCode"/>
+
+        <!-- Exclude as we use custom naming for our class. -->
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+
+        <!-- Exclude as we use the short array syntax over the long one. -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
+    <config name="minimum_supported_wp_version" value="4.4"/>
+
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="5.6-"/>
+
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <!-- Value: replace the text domain used. -->
+            <property name="text_domain" type="array" value="bea-acf-options-for-polylang"/>
+        </properties>
+    </rule>
+    <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">
+        <properties>
+            <property name="blank_line_check" value="true"/>
+        </properties>
+    </rule>
+
+
+</ruleset>
