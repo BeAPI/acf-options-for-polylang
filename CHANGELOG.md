@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.8 - 27 March 2021
+* FIX [#27](https://github.com/BeAPI/acf-options-for-polylang/issues/27): Rest API returns now the right value
+* FIX [#61](https://github.com/BeAPI/acf-options-for-polylang/issues/61): Ajax requests where not localized
+* FIX [#64](https://github.com/BeAPI/acf-options-for-polylang/pull/64) : Compatibility with new versions of ACF
+
 ## 1.1.7 - 07 May 2019
 * Feature: Add a context-sensitive help to the user on ACF options page (tired of updating the generic options ...)
 * Feature: Improve object detection from ACF with get_field()
