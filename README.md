@@ -36,12 +36,13 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 - Nothing more, this plugin is ready to use !
 
 ## [Composer](http://composer.rarst.net/)
+
 - `composer require wpackagist-plugin/acf-options-for-polylang`
 - Nothing more, this plugin is ready to use !
 
 # What ?
 
-## Features 
+## Features
 
 - Almost simple fields (text, textarea, links, etc)
 - Repeater fields (with simple fields)
@@ -49,10 +50,12 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 ## More features to come
 
 As you can see, some [issues](../../issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) are feature requests :
+
 - Migration of data for using plugin : at activation, all data will not be anymore available, but still in database.
 - Migration of data for not using plugin anymore
 
 ## Next Roadmap
+
 - Fixing [#41] : repeater issue when need to get all languages one.
 
 ## Contributing
@@ -68,9 +71,20 @@ If you identify any errors or have an idea for improving the plugin, feel free t
 ## Using fields
 
 Nothing change, we have made all the hooks for you, so no need to prefix your fields with a lang or something else.
-Only use ACF's helpers to get and show the fields as you did before with [get_field()](https://www.advancedcustomfields.com/resources/get_field/) or the_field() : 
+Only use ACF's helpers to get and show the fields as you did before with [get_field()](https://www.advancedcustomfields.com/resources/get_field/) or the_field() :
 
 `get_field( 'footer_disclaimer', 'options' );`
+
+## Excluding options pages
+
+If you don't want this functionality on a certain options page, add the `post_id` to the list of excluded options pages.
+
+```
+add_filter( 'bea.aofp.excluded_post_ids', function($ids) {
+	$ids[] = 'custom_options_page_post_id';
+	return $ids;
+}, 10, 1 );
+```
 
 ## Default values (with "All languages")
 
