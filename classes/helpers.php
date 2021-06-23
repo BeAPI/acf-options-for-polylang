@@ -61,7 +61,7 @@ class Helpers {
 		}
 
 		// Return false if the option page ID is in the list of excluded ID's
-		if ( in_array( $post_id, apply_filters( 'bea.aofp.excluded_post_ids', [] ) ) ) {
+		if ( in_array( $post_id, apply_filters( 'bea.aofp.excluded_post_ids', [] ), true ) ) {
 			return false;
 		}
 
