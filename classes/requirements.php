@@ -18,7 +18,7 @@ class Requirements {
 			return false;
 		}
 
-		if ( version_compare( acf()->version, '5.6.0', '>' ) ) {
+		if ( version_compare( acf()->version, '5.6.0', '<=' ) ) {
 			$this->display_error( __( 'Advanced Custom Fields should be on version 5.6.0 or above.', 'bea-acf-options-for-polylang' ) );
 
 			return false;
