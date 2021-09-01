@@ -5,7 +5,7 @@ Plugin URL: https://github.com/BeAPI/acf-options-for-polylang
 Requires at Least: 4.7
 Tested Up To: 5.6
 Tags: acf, polylang, option, options, options page, advanced custom fields
-Stable tag: 1.1.8
+Stable tag: 1.1.10
 Requires PHP: 5.6
 
 Add ACF options page support for Polylang.
@@ -57,6 +57,9 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 - Nothing more, this plugin is ready to use !
 
 == Changelog ==
+
+= 1.1.10 - 1 Sept 2021
+- FIX: WordPress.org version generation
 
 = 1.1.9 - 1 Sept 2021
 - FIX: ACF 5.6.0 version check

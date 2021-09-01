@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.10 - 1 Sept 2021
+# FIX: WordPress.org version generation
+
 ## 1.1.9 - 1 Sept 2021
 * FIX: ACF 5.6.0 version check
 * FEATURE: Add new filter bea.aofp.excluded_post_ids to skip page ids
