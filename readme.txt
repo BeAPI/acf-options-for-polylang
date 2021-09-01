@@ -58,6 +58,11 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 
 == Changelog ==
 
+= 1.1.9 - 1 Sept 2021
+- FIX: ACF 5.6.0 version check
+- FEATURE: Add new filter bea.aofp.excluded_post_ids to skip page ids
+
+
 = 1.1.8 - 27 March 2021
 - FIX : Rest API returns now the right value
 - FIX : Ajax requests where not localized
