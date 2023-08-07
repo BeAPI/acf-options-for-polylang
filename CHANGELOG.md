@@ -1,7 +1,11 @@
 # Changelog
 
+## 1.1.11 - 27 July 2023
+* Feature: [#85](https://github.com/BeAPI/acf-options-for-polylang/pull/85) Add support for `composer/installer:2.0`
+* Tested up on WP 6.2
+
 ## 1.1.10 - 1 Sept 2021
-# FIX: WordPress.org version generation
+* FIX: WordPress.org version generation
 
 ## 1.1.9 - 1 Sept 2021
 * FIX: ACF 5.6.0 version check
