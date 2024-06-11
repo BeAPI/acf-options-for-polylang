@@ -25,7 +25,12 @@ class Admin {
 	/**
 	 * Displays context-sensitive help to the user
 	 */
-	public function submitbox_before_major_actions() {
+	public function submitbox_before_major_actions($page) {
+		// If Polylang isn't active for this page, don't display the message
+		if ( ! Helpers::is_option_page( $page['post_id'] ) ) {
+			return;
+		}
+		
 		$current_lang = pll_current_language( 'name' );
 		if ( false !== $current_lang ) {
 			/* translators: %s: current language name */
