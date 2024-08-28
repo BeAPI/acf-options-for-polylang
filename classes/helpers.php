@@ -35,7 +35,7 @@ class Helpers {
 			$post_id = 'options';
 		}
 
-		return str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $post_id );
+		return $post_id ? str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $post_id ) : 0;
 	}
 
 
