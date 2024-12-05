@@ -3,7 +3,7 @@ Contributors: momo360modena, BeAPI, maximeculea, NicolasKulka
 Author URI: https://beapi.fr
 Plugin URL: https://github.com/BeAPI/acf-options-for-polylang
 Requires at Least: 4.7
-Tested up to: 6.2
+Tested up to: 6.7
 Tags: acf, polylang, option, options, options page, advanced custom fields
 Stable tag: 1.1.11
 Requires PHP: 5.6
