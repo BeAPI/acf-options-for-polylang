@@ -12,7 +12,7 @@ class Requirements {
 	 * @return bool
 	 */
 	public function check_requirements() {
-		if ( ! function_exists( 'acf' ) || ! function_exists( 'pll_current_language' ) ) {
+		if ( ! function_exists( 'acf' ) || ! defined( 'POLYLANG_VERSION' ) ) {
 			$this->display_error( __( 'Advanced Custom Fields and Polylang are required plugins.', 'bea-acf-options-for-polylang' ) );
 
 			return false;
