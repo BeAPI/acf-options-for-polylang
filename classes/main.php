@@ -47,7 +47,7 @@ class Main {
 	 *
 	 */
 	public function get_default_reference( $reference, $field_name, $post_id ) {
-		if ( ! empty( $reference ) ) {
+		if ( ! empty( $reference ) || !$post_id ) {
 			return $reference;
 		}
 
