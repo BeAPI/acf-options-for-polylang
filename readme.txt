@@ -58,6 +58,9 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 
 == Changelog ==
 
+= 1.1.12 - 26 March 2025 =
+- FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
+
 = 1.1.11 - 27 July 2023
 - Tested up on WP 6.2
 

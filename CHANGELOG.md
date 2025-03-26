@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.1.12 - 26 March 2025
+* FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
+
 ## 1.1.11 - 27 July 2023
 * Feature: [#85](https://github.com/BeAPI/acf-options-for-polylang/pull/85) Add support for `composer/installer:2.0`
 * Tested up on WP 6.2
