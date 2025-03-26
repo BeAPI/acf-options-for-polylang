@@ -55,7 +55,7 @@ class Main {
 		 * Dynamically get the options page ID
 		 * @see : https://regex101.com/r/58uhKg/2/
 		 */
-		$_post_id = preg_replace( '/(_[a-z]{2}_[A-Z]{2})/', '', $post_id );
+		$_post_id = $post_id ? preg_replace( '/(_[a-z]{2}_[A-Z]{2})/', '', $post_id ) : 0;
 
 		remove_filter( 'acf/load_reference', [ $this, 'get_default_reference' ] );
 		$reference = acf_get_reference( $field_name, $_post_id );

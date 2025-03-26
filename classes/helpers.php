@@ -15,27 +15,27 @@ class Helpers {
 	 * @author Maxime CULEA
 	 */
 	public static function original_option_id( $post_id ) {
-		// $post_id may be an object
+		// Default value for $post_id
+		$processed_post_id = 0;
+
+		// If $post_id is an object, determine its type
 		if ( is_object( $post_id ) ) {
-			if ( isset( $post_id->post_type, $post_id->ID ) ) { // post
-				$post_id = $post_id->ID;
-			} elseif ( isset( $post_id->roles, $post_id->ID ) ) { // user
-				$post_id = 'user_' . $post_id->ID;
-			} elseif ( isset( $post_id->taxonomy, $post_id->term_id ) ) { // term
-				$post_id = 'term_' . $post_id->term_id;
-			} elseif ( isset( $post_id->comment_ID ) ) { // comment
-				$post_id = 'comment_' . $post_id->comment_ID;
-			} else { // default
-				$post_id = 0;
+			if ( isset( $post_id->post_type, $post_id->ID ) ) {
+				$processed_post_id = $post_id->ID;
+			} elseif ( isset( $post_id->roles, $post_id->ID ) ) {
+				$processed_post_id = 'user_' . $post_id->ID;
+			} elseif ( isset( $post_id->taxonomy, $post_id->term_id ) ) {
+				$processed_post_id = 'term_' . $post_id->term_id;
+			} elseif ( isset( $post_id->comment_ID ) ) {
+				$processed_post_id = 'comment_' . $post_id->comment_ID;
 			}
 		}
 
-		// allow for option == options
-		if ( 'option' === $post_id ) {
-			$post_id = 'options';
-		}
+		// Replace 'option' with 'options'
+		$processed_post_id = ( 'option' === $processed_post_id ) ? 'options' : $processed_post_id;
 
-		return str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $post_id );
+		// Remove the locale suffix from $processed_post_id
+		return str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $processed_post_id );
 	}
 
 
