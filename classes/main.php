@@ -76,7 +76,14 @@ class Main {
 	 *
 	 */
 	public function get_default_value( $value, $post_id, $field ) {
-		if ( ! acf_is_ajax() && ( is_admin() || ! Helpers::is_option_page( $post_id ) ) ) {
+		$enable = acf_is_ajax() || ! is_admin() && Helpers::is_option_page( $post_id );
+
+		/**
+		 * Allow to override default logic for enabling default values
+		 *
+		 * @param  bool  $enable
+		 */
+		if ( ! apply_filters( 'bea.aofp.get_default_enable', $enable, $post_id, $field ) ) {
 			return $value;
 		}
 
