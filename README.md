@@ -68,16 +68,12 @@ This plugin includes comprehensive unit tests. See [TESTING.md](TESTING.md) for 
 
 Quick start:
 ```bash
-# Using Docker (recommended)
 npm install && composer install
 npm run wp-env:start
 npm run test:unit
-
-# Traditional setup
-composer install
-./bin/install-wp-tests.sh wordpress_test root '' localhost latest
-./vendor/bin/phpunit
 ```
+
+See [TESTING.md](TESTING.md) for detailed testing documentation.
 
 ### Issues & features request / proposal
 

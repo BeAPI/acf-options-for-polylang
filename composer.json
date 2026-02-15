@@ -30,8 +30,8 @@
 		"overtrue/phplint": "^9.0",
 		"php-parallel-lint/php-parallel-lint": "^1.4",
 		"phpro/grumphp-shim": "^2.7",
-		"phpunit/phpunit": "^9.6 || ^10.0 || ^11.0",
-		"yoast/phpunit-polyfills": "^2.0 || ^3.0",
+		"phpunit/phpunit": "^9.6",
+		"yoast/phpunit-polyfills": "^2.0",
 		"mockery/mockery": "^1.6"
 	},
 	"scripts": {

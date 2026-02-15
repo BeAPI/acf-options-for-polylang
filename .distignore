@@ -28,8 +28,7 @@ grumphp.yml
 .phpcs.xml.dist
 
 # Tests
-tests
-bin/install-wp-tests.sh
+tests/
 phpunit.xml
 phpunit.xml.dist
 .phpunit.result.cache

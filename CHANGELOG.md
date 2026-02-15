@@ -13,7 +13,6 @@
 * Add GitHub Actions workflow for automated testing (66 PHP/WP combinations)
 * Add GitHub Actions workflow for code quality checks across all PHP versions
 * Add TESTING.md documentation for running and writing tests
-* Add traditional test setup script (bin/install-wp-tests.sh)
 * Add 41 unit test methods covering all main classes:
   - 15 tests for Main class
   - 13 tests for Helpers class

@@ -81,19 +81,7 @@ coverage.xml
 clover.xml
 
 # Test files and directories
-tests/
-bin/install-wp-tests.sh
-phpunit.xml.dist
 .phpunit.cache
-
-# Development and CI files
-.github/
-.gitignore
-.gitattributes
-.distignore
-grumphp.yml
-phpcs.xml
-TESTING.md
 
 # Build and temporary files
 *.log
