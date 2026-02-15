@@ -4,10 +4,15 @@
  *
  * This mu-plugin:
  * - Creates French and English languages for Polylang
- * - Registers an ACF options page for testing
+ * - Registers an ACF options page for testing (custom option key, not default 'options')
  *
  * @package BEA\ACF_Options_For_Polylang
  */
+
+/**
+ * Custom options page post_id (used so the plugin suffixes it per language, e.g. theme-general-settings_fr_FR).
+ */
+const BEA_AOFP_THEME_OPTIONS_POST_ID = 'theme-general-settings';
 
 /**
  * Setup Polylang languages.
@@ -74,12 +79,13 @@ add_action(
 			return;
 		}
 
-		// Register options page.
+		// Register options page with custom post_id (not default 'options') so ACF Options for Polylang suffixes per language.
 		acf_add_options_page(
 			[
 				'page_title' => __( 'Theme General Settings', 'bea-acf-options-for-polylang' ),
 				'menu_title' => __( 'Theme Settings', 'bea-acf-options-for-polylang' ),
-				'menu_slug'  => 'theme-general-settings',
+				'menu_slug'  => BEA_AOFP_THEME_OPTIONS_POST_ID,
+				'post_id'    => BEA_AOFP_THEME_OPTIONS_POST_ID,
 				'capability' => 'edit_posts',
 				'redirect'   => false,
 			]
@@ -132,13 +138,48 @@ add_action(
 						'default_value' => 0,
 						'ui'            => 1,
 					],
+					[
+						'key'        => 'field_links_repeater',
+						'label'       => 'Links',
+						'name'       => 'links',
+						'type'       => 'repeater',
+						'layout'     => 'table',
+						'min'        => 0,
+						'max'        => 5,
+						'sub_fields' => [
+							[
+								'key'   => 'field_link_label',
+								'label' => 'Label',
+								'name'  => 'label',
+								'type'  => 'text',
+							],
+							[
+								'key'   => 'field_link_url',
+								'label' => 'URL',
+								'name'  => 'url',
+								'type'  => 'url',
+							],
+							[
+								'key'            => 'field_link_related_post',
+								'label'          => 'Related post',
+								'name'           => 'related_post',
+								'type'           => 'relationship',
+								'post_type'      => [ 'post', 'page' ],
+								'return_format'  => 'object',
+								'min'            => 0,
+								'max'            => 1,
+								'filters'        => [ 'search' ],
+								'elements'       => [ 'featured_image' ],
+							],
+						],
+					],
 				],
 				'location'              => [
 					[
 						[
 							'param'    => 'options_page',
 							'operator' => '==',
-							'value'    => 'theme-general-settings',
+							'value'    => BEA_AOFP_THEME_OPTIONS_POST_ID,
 						],
 					],
 				],
@@ -164,10 +205,10 @@ add_action(
 			return;
 		}
 
-		$site_title       = get_field( 'site_title', 'option' );
-		$site_description = get_field( 'site_description', 'option' );
-		$contact_email    = get_field( 'contact_email', 'option' );
-		$enable_feature   = get_field( 'enable_feature', 'option' );
+		$site_title       = get_field( 'site_title', BEA_AOFP_THEME_OPTIONS_POST_ID );
+		$site_description = get_field( 'site_description', BEA_AOFP_THEME_OPTIONS_POST_ID );
+		$contact_email    = get_field( 'contact_email', BEA_AOFP_THEME_OPTIONS_POST_ID );
+		$enable_feature   = get_field( 'enable_feature', BEA_AOFP_THEME_OPTIONS_POST_ID );
 
 		$site_title       = is_string( $site_title ) ? $site_title : '';
 		$site_description = is_string( $site_description ) ? $site_description : '';
@@ -175,6 +216,43 @@ add_action(
 		$enable_feature   = (bool) $enable_feature;
 
 		$option_label = __( 'Theme options (current language)', 'bea-acf-options-for-polylang' );
+		$links_html   = '';
+		if ( have_rows( 'links', BEA_AOFP_THEME_OPTIONS_POST_ID ) ) :
+			$links_html = '<ul style="margin:0;padding-left:1.2em;">';
+			while ( have_rows( 'links', BEA_AOFP_THEME_OPTIONS_POST_ID ) ) :
+				the_row();
+				$label        = get_sub_field( 'label' );
+				$url          = get_sub_field( 'url' );
+				$related_post = get_sub_field( 'related_post' );
+				$label        = is_string( $label ) ? $label : '';
+				$url          = is_string( $url ) ? $url : '';
+				$related_html = '';
+				if ( ! empty( $related_post ) ) {
+					$post_obj = is_array( $related_post ) ? reset( $related_post ) : $related_post;
+					if ( $post_obj instanceof \WP_Post ) {
+						$related_html = sprintf(
+							' <span style="color:#666;">(%s: <a href="%s">%s</a>)</span>',
+							esc_html__( 'Related', 'bea-acf-options-for-polylang' ),
+							esc_url( get_permalink( $post_obj ) ),
+							esc_html( get_the_title( $post_obj ) )
+						);
+					}
+				}
+				if ( $label || $url || $related_html ) {
+					$links_html .= '<li>';
+					$links_html .= $url
+						? sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( $label ?: $url ) )
+						: esc_html( $label );
+					$links_html .= $related_html;
+					$links_html .= '</li>';
+				}
+			endwhile;
+			$links_html .= '</ul>';
+			$links_html  = '<dt style="font-weight:600;">Links</dt><dd>' . $links_html . '</dd>';
+		else :
+			$links_html = '<dt style="font-weight:600;">Links</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
+		endif;
+
 		printf(
 			'<div class="theme-options-preview" style="margin:1em 0;padding:1em;border:1px solid #ccc;background:#f9f9f9;font-size:0.9em;">'
 			. '<strong>%s</strong>'
@@ -183,12 +261,14 @@ add_action(
 			. '<dt style="font-weight:600;">Site Description</dt><dd>%s</dd>'
 			. '<dt style="font-weight:600;">Contact Email</dt><dd>%s</dd>'
 			. '<dt style="font-weight:600;">Enable Feature</dt><dd>%s</dd>'
+			. '%s'
 			. '</dl></div>',
 			esc_html( $option_label ),
 			esc_html( $site_title ),
 			esc_html( $site_description ),
 			esc_html( $contact_email ),
-			$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' )
+			$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' ),
+			$links_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
 	},
 	10,

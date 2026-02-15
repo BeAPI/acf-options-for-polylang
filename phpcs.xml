@@ -46,6 +46,11 @@
     <rule ref="Universal.Arrays.DisallowShortArraySyntax">
         <severity>0</severity>
     </rule>
+
+    <!-- Allow short ternary operator (?:). -->
+    <rule ref="Universal.Operators.DisallowShortTernary">
+        <severity>0</severity>
+    </rule>
     
     <config name="minimum_supported_wp_version" value="6.0"/>
 

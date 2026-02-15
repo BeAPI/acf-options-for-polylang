@@ -55,11 +55,15 @@ class Main {
 			return $reference;
 		}
 
+		$locales_regex_fragment = Helpers::locales_regex_fragment();
+		if ( ! $locales_regex_fragment ) {
+			return $reference;
+		}
+
 		/**
-		 * Dynamically get the options page ID
-		 * @see : https://regex101.com/r/58uhKg/2/
+		 * Dynamically get the options page ID by stripping Polylang locale suffix.
 		 */
-		$_post_id = $post_id ? preg_replace( '/(_[a-z]{2}_[A-Z]{2})/', '', $post_id ) : 0;
+		$_post_id = preg_replace( '/_(' . $locales_regex_fragment . ')$/', '', $post_id );
 
 		remove_filter( 'acf/load_reference', [ $this, 'get_default_reference' ] );
 		$reference = acf_get_reference( $field_name, $_post_id );
@@ -176,7 +180,8 @@ class Main {
 			return $future_post_id;
 		}
 
-		// If no custom acf key, no need while already impacted by Polylang locale
+		// For the default ACF options key ('options'), skip: Polylang locale already applies.
+		// For custom option keys (e.g. theme slug), append locale so each language has its own storage.
 		if ( 'options' !== Helpers::original_option_id( $future_post_id ) ) {
 			$dl = acf_get_setting( 'default_language' );
 			$cl = acf_get_setting( 'current_language' );
