@@ -26,7 +26,7 @@ class Admin {
 	 * Displays context-sensitive help to the user
 	 */
 	public function submitbox_before_major_actions() {
-		$current_lang = pll_current_language( 'name' );
+		$current_lang = function_exists( 'pll_current_language' ) ? \pll_current_language( 'name' ) : false;
 		if ( false !== $current_lang ) {
 			/* translators: %s: current language name */
 			$output = sprintf( __( 'You are changing the options for language %s', 'bea-acf-options-for-polylang' ), $current_lang );

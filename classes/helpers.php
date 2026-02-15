@@ -35,7 +35,11 @@ class Helpers {
 			$post_id = 'options';
 		}
 
-		return str_replace( sprintf( '_%s', pll_current_language( 'locale' ) ), '', $post_id );
+		if ( function_exists( 'pll_current_language' ) ) {
+			return str_replace( sprintf( '_%s', \pll_current_language( 'locale' ) ), '', $post_id );
+		}
+
+		return $post_id;
 	}
 
 
