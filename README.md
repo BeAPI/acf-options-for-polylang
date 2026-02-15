@@ -21,7 +21,7 @@ Then to set and contribute your option page, simply use the Polylang's language 
 - [WordPress](https://wordpress.org/) 6.0+ / Tested from 6.0 to latest
 - PHP 7.4 to 8.4 / Tested from 7.4 to 8.4
 - [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) 5.6.0+
-- [Polylang](https://polylang.pro/)
+- [Polylang](https://polylang.pro/) (tested up to 3.7.7)
 
 # Installation
 
