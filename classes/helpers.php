@@ -36,7 +36,7 @@ class Helpers {
 
 		// Remove the locale suffix from $processed_post_id
 		if ( function_exists( 'pll_current_language' ) ) {
-			return str_replace( sprintf( '_%s', \pll_current_language( 'locale' ) ), '', $processed_post_id );
+			return $processed_post_id ? str_replace( sprintf( '_%s', \pll_current_language( 'locale' ) ), '', $processed_post_id ) : 0;
 		}
 
 		return $processed_post_id;
