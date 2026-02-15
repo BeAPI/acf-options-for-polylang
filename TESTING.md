@@ -22,7 +22,9 @@ You need to have the following installed on your system:
 
 ## Test Coverage Summary
 
-The test suite includes **41 test methods** (up to 2 may be skipped when ACF or Polylang is missing) covering all main classes. Tests run in the context of the ACF options page `theme-general-settings` (http://localhost:8888/wp-admin/admin.php?page=theme-general-settings).
+The test suite includes **43 test methods** (up to 2 may be skipped when ACF or Polylang is missing) covering all main classes. Tests run in the context of the ACF options page `theme-general-settings` (http://localhost:8888/wp-admin/admin.php?page=theme-general-settings).
+
+**Runtime language switch:** Two tests explicitly cover a change of language at runtime so that option values can differ per language (e.g. FR vs EN): `test_set_current_site_lang_changes_with_runtime_language_switch` and `test_set_options_id_lang_returns_different_id_per_runtime_language`.
 
 ### Test Matrix: Non-Regression Details
 
@@ -50,6 +52,8 @@ The test suite includes **41 test methods** (up to 2 may be skipped when ACF or 
 | **Main** | `test_main_instance_exists` | Main singleton instantiation | Main class is correctly bootstrapped. |
 | **Main** | `test_filters_are_registered` | Hooks: `acf/validate_post_id`, `acf/settings/current_language`, `acf/load_value`, `acf/load_reference` | Core ACF integration filters are registered; options localization and default value/reference logic can run. |
 | **Main** | `test_set_current_site_lang` | `set_current_site_lang()` return type | Current language is returned as a string (Polylang integration). |
+| **Main** | `test_set_current_site_lang_changes_with_runtime_language_switch` | `set_current_site_lang()` after `pll_set_language('fr'/'en')` | Changing language at runtime returns the correct locale (fr_FR / en_US) so ACF can store/load different values per language. |
+| **Main** | `test_set_options_id_lang_returns_different_id_per_runtime_language` | `set_options_id_lang()` for custom option page when switching FR/EN | Same option page yields different storage keys (e.g. `theme-general-settings_fr_FR` vs `theme-general-settings_en_US`); guarantees values can differ between languages. |
 | **Main** | `test_set_current_site_lang_rest_api` | `set_current_site_lang()` in REST context | In REST API, WordPress locale is used instead of Polylang. |
 | **Main** | `test_get_default_reference_with_existing_reference` | `get_default_reference()` when reference already set | Existing reference is preserved (no overwrite). |
 | **Main** | `test_get_default_reference_with_localized_post_id` | `get_default_reference()` with localized option ID | Returns string or null; no fatal when no default exists. |

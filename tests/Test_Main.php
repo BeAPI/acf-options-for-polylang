@@ -75,6 +75,58 @@ class Test_Main extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that set_current_site_lang returns different locale when language changes at runtime.
+	 *
+	 * Non-regression: Ensures that a switch from French to English (or vice versa) yields
+	 * the correct locale so ACF options can store/retrieve different values per language.
+	 */
+	public function test_set_current_site_lang_changes_with_runtime_language_switch() {
+		if ( ! function_exists( 'pll_set_language' ) || ! function_exists( 'pll_current_language' ) ) {
+			$this->markTestSkipped( 'Polylang language switch is not available.' );
+		}
+
+		\pll_set_language( 'fr' );
+		$this->assertEquals( 'fr_FR', $this->main->set_current_site_lang(), 'French locale should be returned when language is FR.' );
+
+		\pll_set_language( 'en' );
+		$this->assertEquals( 'en_US', $this->main->set_current_site_lang(), 'English locale should be returned when language is EN.' );
+
+		\pll_set_language( 'fr' );
+		$this->assertEquals( 'fr_FR', $this->main->set_current_site_lang(), 'Switching back to FR should return fr_FR again.' );
+	}
+
+	/**
+	 * Test that set_options_id_lang returns different option IDs per current language at runtime.
+	 *
+	 * Non-regression: Ensures that the same logical option page (e.g. theme-general-settings)
+	 * resolves to different storage keys (e.g. theme-general-settings_fr_FR vs theme-general-settings_en_US)
+	 * so that values can differ between languages.
+	 */
+	public function test_set_options_id_lang_returns_different_id_per_runtime_language() {
+		if ( ! function_exists( 'pll_set_language' ) ) {
+			$this->markTestSkipped( 'Polylang language switch is not available.' );
+		}
+
+		// Use the custom option page from mu-plugin (theme-general-settings); "options" is not suffixed by this plugin.
+		$original_id = 'theme-general-settings';
+		if ( ! Helpers::is_option_page( $original_id ) ) {
+			$this->markTestSkipped( 'ACF options page theme-general-settings is not registered.' );
+		}
+
+		\pll_set_language( 'fr' );
+		$result_fr = $this->main->set_options_id_lang( $original_id, $original_id );
+		$this->assertStringContainsString( '_fr_FR', $result_fr, 'Option ID should contain fr_FR when current language is FR.' );
+		$this->assertEquals( 'theme-general-settings_fr_FR', $result_fr );
+
+		\pll_set_language( 'en' );
+		$result_en = $this->main->set_options_id_lang( $original_id, $original_id );
+		$this->assertStringContainsString( '_en_US', $result_en, 'Option ID should contain en_US when current language is EN.' );
+		$this->assertEquals( 'theme-general-settings_en_US', $result_en );
+
+		$this->assertNotEquals( $result_fr, $result_en, 'Option IDs must differ between FR and EN so values can differ per language.' );
+	}
+
+	/**
 	 * Test set_current_site_lang in REST API context.
 	 */
 	public function test_set_current_site_lang_rest_api() {
