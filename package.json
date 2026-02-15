@@ -4,9 +4,12 @@
 	"description": "Add ACF options page support for Polylang.",
 	"scripts": {
 		"wp-env": "wp-env",
-		"wp-env:start": "wp-env start",
+		"wp-env:start": "wp-env start && npm run wp-env:cleanup-acf-free",
 		"wp-env:stop": "wp-env stop",
 		"wp-env:clean": "wp-env clean",
+		"wp-env:cleanup-acf-free": "npm run wp-env:cleanup-acf-free:cli && npm run wp-env:cleanup-acf-free:tests",
+		"wp-env:cleanup-acf-free:cli": "wp-env run cli rm -rf /var/www/html/wp-content/plugins/advanced-custom-fields",
+		"wp-env:cleanup-acf-free:tests": "wp-env run tests-cli rm -rf /var/www/html/wp-content/plugins/advanced-custom-fields",
 		"test:unit": "wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang \"./vendor/bin/phpunit\"",
 		"test:unit:watch": "wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang \"./vendor/bin/phpunit --testdox\"",
 		"test:setup": "npm install && composer install"

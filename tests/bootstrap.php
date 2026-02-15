@@ -29,11 +29,10 @@ require_once $_tests_dir . '/includes/functions.php';
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin() {
-	// Load ACF plugin.
-	if ( file_exists( WP_PLUGIN_DIR . '/advanced-custom-fields/acf.php' ) ) {
-		require_once WP_PLUGIN_DIR . '/advanced-custom-fields/acf.php';
-	} elseif ( file_exists( WP_PLUGIN_DIR . '/advanced-custom-fields-pro/acf.php' ) ) {
-		require_once WP_PLUGIN_DIR . '/advanced-custom-fields-pro/acf.php';
+	// Load ACF plugin (try Pro first from GitHub zip, then other locations).
+	if ( file_exists( WP_PLUGIN_DIR . '/main/acf.php' ) ) {
+		// ACF Pro from GitHub archive (advanced-custom-fields-pro-main extracts to "main").
+		require_once WP_PLUGIN_DIR . '/main/acf.php';
 	}
 
 	// Load Polylang plugin.

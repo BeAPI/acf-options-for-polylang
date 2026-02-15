@@ -2,16 +2,20 @@
 	"core": "WordPress/WordPress",
 	"plugins": [
 		".",
-		"https://downloads.wordpress.org/plugin/advanced-custom-fields.zip",
+		"https://github.com/pronamic/advanced-custom-fields-pro/archive/refs/heads/main.zip",
 		"https://downloads.wordpress.org/plugin/polylang.zip"
 	],
 	"phpVersion": "8.3",
 	"env": {
 		"tests": {
-			"phpVersion": "8.3"
+			"phpVersion": "8.3",
+			"mappings": {
+				"wp-content/mu-plugins/setup-polylang.php": "./tests/mu-plugins/setup-polylang.php"
+			}
 		}
 	},
 	"mappings": {
-		"wp-content/plugins/acf-options-for-polylang": "."
+		"wp-content/plugins/acf-options-for-polylang": ".",
+		"wp-content/mu-plugins/setup-polylang.php": "./tests/mu-plugins/setup-polylang.php"
 	}
 }

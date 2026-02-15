@@ -88,10 +88,26 @@ class Test_Requirements extends \WP_UnitTestCase {
 	 */
 	public function test_display_error_triggers_error() {
 		$message = 'Test error message';
+		$error_triggered = false;
 
-		// Capture the triggered error.
-		$this->expectError();
+		// Set custom error handler to catch the triggered error.
+		set_error_handler(
+			function ( $errno, $errstr ) use ( &$error_triggered ) {
+				$error_triggered = true;
+				return true; // Suppress error.
+			}
+		);
+
 		$this->requirements->display_error( $message );
+
+		// Restore error handler.
+		restore_error_handler();
+
+		// Verify error was triggered.
+		$this->assertTrue( $error_triggered, 'display_error() should trigger an error' );
+
+		// Verify admin_notices action was added.
+		$this->assertGreaterThan( 0, has_action( 'admin_notices' ) );
 	}
 
 	/**

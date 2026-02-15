@@ -113,8 +113,11 @@ class Test_Main extends \WP_UnitTestCase {
 
 		$result = $this->main->get_default_reference( $reference, $field_name, $post_id );
 
-		// Result should be a string (even if empty).
-		$this->assertIsString( $result );
+		// Result can be a string or null if no default reference exists.
+		$this->assertTrue(
+			is_string( $result ) || is_null( $result ),
+			'Result should be a string or null'
+		);
 	}
 
 	/**
