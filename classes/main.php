@@ -80,7 +80,17 @@ class Main {
 	 *
 	 */
 	public function get_default_value( $value, $post_id, $field ) {
-		if ( ! acf_is_ajax() && ( is_admin() || ! Helpers::is_option_page( $post_id ) ) ) {
+		$enable = acf_is_ajax() || ( ! is_admin() && Helpers::is_option_page( $post_id ) );
+
+		/**
+		 * Allow to override default logic for enabling default values.
+		 *
+		 * @since 2.0.0
+		 * @param bool   $enable  Whether to enable default value fallback.
+		 * @param string $post_id The post ID (options page ID).
+		 * @param array  $field   The ACF field array.
+		 */
+		if ( ! apply_filters( 'bea.aofp.get_default_enable', $enable, $post_id, $field ) ) {
 			return $value;
 		}
 
