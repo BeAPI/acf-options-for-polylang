@@ -152,3 +152,45 @@ add_action(
 		);
 	}
 );
+
+/**
+ * Display option page values in the footer on the front (for testing).
+ * Only runs when not in admin.
+ */
+add_action(
+	'wp_footer',
+	function () {
+		if ( is_admin() || ! function_exists( 'get_field' ) ) {
+			return;
+		}
+
+		$site_title       = get_field( 'site_title', 'option' );
+		$site_description = get_field( 'site_description', 'option' );
+		$contact_email    = get_field( 'contact_email', 'option' );
+		$enable_feature   = get_field( 'enable_feature', 'option' );
+
+		$site_title       = is_string( $site_title ) ? $site_title : '';
+		$site_description = is_string( $site_description ) ? $site_description : '';
+		$contact_email    = is_string( $contact_email ) ? $contact_email : '';
+		$enable_feature   = (bool) $enable_feature;
+
+		$option_label = __( 'Theme options (current language)', 'bea-acf-options-for-polylang' );
+		printf(
+			'<div class="theme-options-preview" style="margin:1em 0;padding:1em;border:1px solid #ccc;background:#f9f9f9;font-size:0.9em;">'
+			. '<strong>%s</strong>'
+			. '<dl style="margin:0.5em 0 0;display:grid;gap:0.25em;">'
+			. '<dt style="font-weight:600;">Site Title</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Site Description</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Contact Email</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Enable Feature</dt><dd>%s</dd>'
+			. '</dl></div>',
+			esc_html( $option_label ),
+			esc_html( $site_title ),
+			esc_html( $site_description ),
+			esc_html( $contact_email ),
+			$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' )
+		);
+	},
+	10,
+	0
+);
