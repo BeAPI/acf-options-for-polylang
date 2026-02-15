@@ -2,11 +2,11 @@
 Contributors: momo360modena, BeAPI, maximeculea, NicolasKulka
 Author URI: https://beapi.fr
 Plugin URL: https://github.com/BeAPI/acf-options-for-polylang
-Requires at Least: 4.7
-Tested up to: 6.2
+Requires at Least: 6.0
+Tested up to: 6.9
 Tags: acf, polylang, option, options, options page, advanced custom fields
-Stable tag: 1.1.11
-Requires PHP: 5.6
+Stable tag: 2.0.0
+Requires PHP: 7.4
 
 Add ACF options page support for Polylang.
 
@@ -57,6 +57,33 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 - Nothing more, this plugin is ready to use !
 
 == Changelog ==
+
+= 2.0.0 - In Development =
+
+**⚠️ Breaking Changes**
+* Minimum PHP version raised from 5.6 to 7.4
+* Minimum WordPress version raised from 4.7 to 6.0
+
+**New Features**
+* Add comprehensive unit testing suite with PHPUnit (41 test methods)
+* Add wp-env configuration for Docker-based testing environment
+* Add GitHub Actions CI/CD workflows for automated testing
+* Test coverage across PHP 7.4-8.4 and WordPress 6.0-6.9
+* Add TESTING.md documentation for developers
+
+**Improvements**
+* Update all development dependencies to latest versions
+* WordPress Coding Standards 3.1 (WP 6.0+ support)
+* PHPUnit 9.6/10.0/11.0 multi-version support
+* Enforce modern short array syntax []
+* Update plugin header with all standard WordPress fields
+* Update copyright to 2025
+
+**Code Quality**
+* 100% compliance with WordPress Coding Standards
+* Automated testing on 66 PHP/WordPress combinations
+* Code coverage reporting with Codecov
+* Automated code quality checks
 
 = 1.1.12 - 26 March 2025 =
 - FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.

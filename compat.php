@@ -24,7 +24,7 @@ class Compatibility {
 
 		unset( $_GET['activate'] );
 
-		add_action( 'admin_notices', array( __CLASS__, 'admin_notices' ) );
+		add_action( 'admin_notices', [ __CLASS__, 'admin_notices' ] );
 	}
 
 	/**

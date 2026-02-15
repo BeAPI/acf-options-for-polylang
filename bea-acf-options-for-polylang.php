@@ -1,15 +1,23 @@
 <?php
 /*
 Plugin Name: ACF Options for Polylang
-Version: 1.1.12
 Plugin URI: https://github.com/BeAPI/acf-options-for-polylang
 Description: Add ACF options page support for Polylang.
+Version: 2.0.0
+Requires at least: 6.0
+Requires PHP: 7.4
+Tested up to: 6.9
 Author: Be API
 Author URI: https://beapi.fr
 Contributors: Maxime Culea, Amaury BALMER
+License: GPL-3.0+
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
+Text Domain: bea-acf-options-for-polylang
+Domain Path: /languages
+Network: false
 ----
 
-Copyright 2018-2019 Be API Technical team (human@beapi.fr)
+Copyright 2018-2025 Be API Technical team (human@beapi.fr)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,20 +40,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants
-define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_VERSION', '1.1.12' );
-define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION', '5.6' );
+define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_VERSION', '2.0.0' );
+define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION', '7.4' );
 
 // Plugin URL and PATH
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_URL', plugin_dir_url( __FILE__ ) );
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BEA_ACF_OPTIONS_MAIN_FILE_DIR', __FILE__ );
-define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_PLUGIN_DIRNAME', basename( rtrim( dirname( __FILE__ ), '/' ) ) );
+define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_PLUGIN_DIRNAME', basename( rtrim( __DIR__, '/' ) ) );
 
 // Check PHP min version
 if ( version_compare( PHP_VERSION, BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION, '<' ) ) {
 	require_once BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'compat.php';
 	// possibly display a notice, trigger error
-	add_action( 'admin_init', array( 'BEA\PB\Compatibility', 'admin_init' ) );
+	add_action( 'admin_init', [ 'BEA\PB\Compatibility', 'admin_init' ] );
 
 	// stop execution of this file
 	return;

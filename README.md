@@ -18,8 +18,8 @@ Then to set and contribute your option page, simply use the Polylang's language 
 
 # Requirements
 
-- Require [WordPress](https://wordpress.org/) 4.7+ / Tested up to 5.2
-- Require PHP 5.6
+- [WordPress](https://wordpress.org/) 6.0+ / Tested from 6.0 to latest
+- PHP 7.4 to 8.4 / Tested from 7.4 to 8.4
 - [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) 5.6.0+
 - [Polylang](https://polylang.pro/)
 
@@ -61,6 +61,23 @@ As you can see, some [issues](../../issues?q=is%3Aissue+is%3Aopen+label%3Aquesti
 ## Contributing
 
 Please refer to the [contributing guidelines](.github/CONTRIBUTING.md) to increase the chance of your pull request to be merged and/or receive the best support for your issue.
+
+### Testing
+
+This plugin includes comprehensive unit tests. See [TESTING.md](TESTING.md) for detailed instructions on running tests.
+
+Quick start:
+```bash
+# Using Docker (recommended)
+npm install && composer install
+npm run wp-env:start
+npm run test:unit
+
+# Traditional setup
+composer install
+./bin/install-wp-tests.sh wordpress_test root '' localhost latest
+./vendor/bin/phpunit
+```
 
 ### Issues & features request / proposal
 

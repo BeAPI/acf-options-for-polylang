@@ -1,0 +1,17 @@
+{
+	"core": "WordPress/WordPress",
+	"plugins": [
+		".",
+		"https://downloads.wordpress.org/plugin/advanced-custom-fields.zip",
+		"https://downloads.wordpress.org/plugin/polylang.zip"
+	],
+	"phpVersion": "8.3",
+	"env": {
+		"tests": {
+			"phpVersion": "8.3"
+		}
+	},
+	"mappings": {
+		"wp-content/plugins/acf-options-for-polylang": "."
+	}
+}

@@ -1,11 +1,56 @@
+# Version control
 .distignore
-.github
 .git
 .gitignore
+.gitattributes
+.github
+
+# Documentation
 CHANGELOG.md
-composer.json
-composer.lock
 LICENSE.md
 README.md
+TESTING.md
+
+# Composer
+composer.json
+composer.lock
+vendor
+
+# npm/Node
+package.json
+package-lock.json
+node_modules
+npm-debug.log
+
+# Code quality tools
 phpcs.xml
 grumphp.yml
+.phpcs.xml.dist
+
+# Tests
+tests
+bin/install-wp-tests.sh
+phpunit.xml
+phpunit.xml.dist
+.phpunit.result.cache
+.phpunit.cache
+coverage
+coverage.xml
+clover.xml
+
+# WordPress development environment
+.wp-env.json
+.wp-env.home.json
+.wp-env.override.json
+
+# IDE and editors
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build files
+*.log

@@ -36,5 +36,4 @@ class Admin {
 
 		echo '<p class="misc-pub-section">' . $output . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
-
 }

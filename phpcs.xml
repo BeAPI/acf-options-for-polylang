@@ -37,19 +37,27 @@
 
         <!-- Exclude as we use custom naming for our class. -->
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
-
-        <!-- Exclude as we use the short array syntax over the long one. -->
-        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
     </rule>
-    <config name="minimum_supported_wp_version" value="4.4"/>
+    
+    <!-- Allow short syntax arrays. -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    
+    <!-- Exclude Universal rule that disallows short array syntax. -->
+    <rule ref="Universal.Arrays.DisallowShortArraySyntax">
+        <severity>0</severity>
+    </rule>
+    
+    <config name="minimum_supported_wp_version" value="6.0"/>
 
     <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="5.6-"/>
+    <config name="testVersion" value="7.4-"/>
 
     <rule ref="WordPress.WP.I18n">
         <properties>
             <!-- Value: replace the text domain used. -->
-            <property name="text_domain" type="array" value="bea-acf-options-for-polylang"/>
+            <property name="text_domain" type="array">
+                <element value="bea-acf-options-for-polylang"/>
+            </property>
         </properties>
     </rule>
     <rule ref="WordPress.WhiteSpace.ControlStructureSpacing">

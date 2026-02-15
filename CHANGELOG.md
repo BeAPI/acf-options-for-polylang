@@ -1,5 +1,60 @@
 # Changelog
 
+## 2.0.0 - In Progress (Development)
+
+### 🚨 Breaking Changes
+* **BREAKING**: Minimum PHP version raised from 5.6 to 7.4
+* **BREAKING**: Minimum WordPress version raised from 4.7 to 6.0
+* **BREAKING**: Updated plugin header with modern WordPress standards
+
+### ✨ New Features
+* Add comprehensive unit testing suite with PHPUnit
+* Add wp-env configuration for Docker-based testing environment
+* Add GitHub Actions workflow for automated testing (66 PHP/WP combinations)
+* Add GitHub Actions workflow for code quality checks across all PHP versions
+* Add TESTING.md documentation for running and writing tests
+* Add traditional test setup script (bin/install-wp-tests.sh)
+* Add 41 unit test methods covering all main classes:
+  - 15 tests for Main class
+  - 13 tests for Helpers class
+  - 7 tests for Requirements class
+  - 6 tests for Admin class
+
+### 🔧 Improvements
+* Update all require-dev dependencies to latest versions:
+  - PHPUnit: ^9.6 || ^10.0 || ^11.0 (multi-version support)
+  - WordPress Coding Standards: ^3.1 (with WP 6.0+ support)
+  - PHP_CodeSniffer: ^3.10
+  - PHPUnit Polyfills: ^2.0 || ^3.0
+  - GrumPHP: ^2.7
+  - PHPLint: ^9.0
+  - Mockery: ^1.6
+* Enforce short array syntax [] in phpcs.xml configuration
+* Fix phpcs.xml text_domain property deprecation warning
+* Update .gitignore with all test-related files and artifacts
+* Update .distignore to exclude all development files from production zip
+* Update plugin header with all standard WordPress fields:
+  - Requires at least, Requires PHP, Tested up to
+  - License, License URI, Text Domain, Domain Path, Network
+* Update copyright year to 2025
+
+### 📊 Testing & Quality
+* Test coverage across PHP 7.4, 8.0, 8.1, 8.2, 8.3, 8.4
+* Test coverage across WordPress 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, latest
+* Automated code quality checks on all PHP versions
+* Code coverage reporting with Codecov integration
+* All code complies with WordPress Coding Standards
+
+### 🐛 Bug Fixes
+* Fix coding standards violations (use __DIR__ instead of dirname(__FILE__))
+* Convert array() syntax to short [] syntax throughout codebase
+
+### 📚 Documentation
+* Add comprehensive TESTING.md with setup and usage instructions
+* Add test coverage documentation
+* Add contribution guidelines for tests
+* Update README.md with testing quick start section
+
 ## 1.1.12 - 26 March 2025
 * FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
 
