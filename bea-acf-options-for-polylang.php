@@ -62,6 +62,9 @@ if ( version_compare( PHP_VERSION, BEA_ACF_OPTIONS_FOR_POLYLANG_MIN_PHP_VERSION,
 /** Autoload all the things \o/ */
 require_once BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'autoload.php';
 
+/** Helper functions (public API) */
+require_once BEA_ACF_OPTIONS_FOR_POLYLANG_DIR . 'functions.php';
+
 add_action( 'init', 'bea_acf_options_for_polylang_load', 100 );
 function bea_acf_options_for_polylang_load() {
 	load_plugin_textdomain(

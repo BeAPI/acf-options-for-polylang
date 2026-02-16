@@ -4,17 +4,17 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/beapi/acf-options-for-polylang/badge)](https://www.codefactor.io/repository/github/beapi/acf-options-for-polylang)
 
-You are using Advanced Custom Fields for creating option pages and you have Polylang installed for awsome multilingual site ?
+Are you using Advanced Custom Fields to create option pages and have Polylang installed for your awesome multilingual website?
 
-Sadly, Polylang is not handling ACF's Option Pages. Which means values will be the same for all languages you have set.
+Unfortunately, Polylang does not natively support ACF Option Pages. This results in the same values being used across all your site's languages.
 
-We are here to save your life ! Once this plugin is activated, you will be able to set a different value for each language, and if none is set, the "All languages" value will be used as default one.
+This plugin solves that problem! Once activated, you’ll be able to set different values for each language. If a value isn’t set for a specific language, the “All languages” value will be used by default.
 
-# How ?
+# How does it work?
 
-This plugin will store a value for each language into database. Then Polylang's languages are used to get the values from the DB. <b>That means at activation, all existing data will not be anymore available, but still in database. You will retrieve it ad plugin deactivation.</b>
+This plugin saves separate values for each language in the database. Polylang’s language settings are then used to fetch the appropriate value from the database. <b>Note: When you activate the plugin, your existing option values will be temporarily unavailable but remain in the database. You can recover them by deactivating the plugin.</b>
 
-Then to set and contribute your option page, simply use the Polylang's language admin flags ui.
+To set or update your option pages in a specific language, simply use the Polylang language flags in the WordPress admin bar (the integrated language switcher) to select your desired language before editing the options.
 
 # Requirements
 
@@ -41,22 +41,6 @@ Then activate ACF Options For Polylang to handle ACF Options in setted Polylang'
 - Nothing more, this plugin is ready to use !
 
 # What ?
-
-## Features
-
-- Almost simple fields (text, textarea, links, etc)
-- Repeater fields (with simple fields)
-
-## More features to come
-
-As you can see, some [issues](../../issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) are feature requests :
-
-- Migration of data for using plugin : at activation, all data will not be anymore available, but still in database.
-- Migration of data for not using plugin anymore
-
-## Next Roadmap
-
-- Fixing [#41] : repeater issue when need to get all languages one.
 
 ## Contributing
 
@@ -88,38 +72,76 @@ Only use ACF's helpers to get and show the fields as you did before with [get_fi
 
 `get_field( 'footer_disclaimer', 'options' );`
 
-## Excluding options pages
+## Excluding Option Pages from Localization
 
-If you don't want this functionality on a certain options page, add the `post_id` to the list of excluded options pages.
+If you want to prevent this plugin from applying its functionality to a specific ACF options page, you can exclude it by adding its `post_id` to the exclusion filter.
 
-```
-add_filter( 'bea.aofp.excluded_post_ids', function($ids) {
-	$ids[] = 'custom_options_page_post_id';
-	return $ids;
+Add the following code to your theme or custom plugin (replace `'custom_options_page_post_id'` with your actual options page post ID):
+
+```php
+add_filter( 'bea.aofp.excluded_post_ids', function( $ids ) {
+    $ids[] = 'custom_options_page_post_id'; // Exclude this options page from localization
+    return $ids;
 }, 10, 1 );
 ```
 
-## Default values (with "All languages")
+This will ensure that the specified options page is not affected by language-specific behavior and will always load/save its values without localization.
 
-The plugin is designed to get the Polylang "All languages" value if the current lang one is empty. But if you are not interested about this behaviour, you can programmatically deactivate it using the following filter by setting to false.
+## Default Values (“All languages” Fallback)
 
-### For all ACF Options pages
+By default, this plugin will use the Polylang “All languages” value when there is no value set for the current language. If you prefer not to use this fallback behavior, you can easily disable it using a filter.
 
+### Disable fallback for all ACF Options pages
+
+Add this code to your theme or plugin:
+```php
+add_filter( 'bea.aofp.get_default', '__return_false' );
 ```
-<?php add_filter( 'bea.aofp.get_default', '__return_false' );
-```
 
-### For just one ACF Options page
+### Disable fallback for a specific ACF Options page
 
-```
-<?php add_filter( 'bea.aofp.get_default', function( $show_default, $post_id ) {
+You can target a single ACF Options page using the `$post_id` parameter:
+```php
+add_filter( 'bea.aofp.get_default', function( $show_default, $post_id ) {
 	if ( 'my_custom_acf_option_post_id' === $post_id ) {
-		// Custom condition for the wanted post id ACF Option page
+		// Disable default fallback for this specific ACF Options page
 		return false;
 	}
 
 	return $show_default;
 }, 10, 2 );
+```
+
+## Loading untranslated (default) option values
+
+When you need to read the **default / untranslated** values (the ones stored without a language suffix, used as fallback when no translation exists), use the context switch API. This applies to all fields, including repeater sub-fields and relationship fields.
+
+### Switch / restore context
+
+- **`bea_aofp_switch_to_untranslated()`** — subsequent `get_field( ..., option_page_id )` and `have_rows( ..., option_page_id )` will load values from the unsuffixed key (default values).
+- **`bea_aofp_restore_current_lang()`** — restores the previous context; option values are again loaded for the current language.
+
+Calls can be nested: each `restore_current_lang()` undoes the last `switch_to_untranslated()`.
+
+### Example
+
+```php
+// Current language values
+$title = get_field( 'site_title', 'theme-general-settings' );
+
+// Temporarily load default (untranslated) values
+bea_aofp_switch_to_untranslated();
+$default_title = get_field( 'site_title', 'theme-general-settings' );
+if ( have_rows( 'links', 'theme-general-settings' ) ) {
+	while ( have_rows( 'links', 'theme-general-settings' ) ) {
+		the_row();
+		$default_related_post = get_sub_field( 'related_post' ); // Also uses default context
+	}
+}
+bea_aofp_restore_current_lang();
+
+// Back to current language
+$title_again = get_field( 'site_title', 'theme-general-settings' );
 ```
 
 # Who ?

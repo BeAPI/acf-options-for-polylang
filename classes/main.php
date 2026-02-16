@@ -8,9 +8,19 @@ class Main {
 	 */
 	use Singleton;
 
+	/**
+	 * Stack for untranslated context (allows nested switch/restore).
+	 *
+	 * @var array<int, true>
+	 */
+	private static $untranslated_context_stack = [];
+
 	protected function init() {
 		// Set the setting's lang
 		add_filter( 'acf/validate_post_id', [ $this, 'set_options_id_lang' ], 10, 2 );
+
+		// When in untranslated context, force load from unsuffixed post_id (covers repeater sub_fields, relationship, etc.).
+		add_filter( 'acf/load_value', [ $this, 'maybe_load_untranslated_value' ], 5, 3 );
 
 		// Set Polylang current lang
 		add_filter( 'acf/settings/current_language', [ $this, 'set_current_site_lang' ] );
@@ -20,6 +30,46 @@ class Main {
 
 		// Help loading right field for repeaters
 		add_filter( 'acf/load_reference', [ $this, 'get_default_reference' ], 10, 3 );
+	}
+
+	/**
+	 * When in untranslated context, load value from post_id without locale suffix.
+	 * Ensures repeater sub_fields (e.g. relationship) use default values.
+	 *
+	 * @param mixed  $value   The value (ignored when we override).
+	 * @param string $post_id The post_id ACF is using (may be localized).
+	 * @param array  $field   The ACF field.
+	 * @return mixed
+	 */
+	public function maybe_load_untranslated_value( $value, $post_id, $field ) {
+		if ( empty( self::$untranslated_context_stack ) ) {
+			return $value;
+		}
+		if ( ! Helpers::already_localized( $post_id ) ) {
+			return $value;
+		}
+		$original_post_id = Helpers::original_option_id( $post_id );
+		if ( $original_post_id === $post_id ) {
+			return $value;
+		}
+		// Only override for option page keys (base or sub_keys like repeater rows).
+		$option_pages = Helpers::get_option_page_ids();
+		$is_option_key = false;
+		foreach ( $option_pages as $opt_id ) {
+			if ( $original_post_id === $opt_id || strpos( $original_post_id, $opt_id . '_' ) === 0 ) {
+				$is_option_key = true;
+				break;
+			}
+		}
+		if ( ! $is_option_key ) {
+			return $value;
+		}
+		remove_filter( 'acf/load_value', [ $this, 'maybe_load_untranslated_value' ], 5 );
+		remove_filter( 'acf/load_value', [ $this, 'get_default_value' ], 10 );
+		$value = acf_get_value( $original_post_id, $field );
+		add_filter( 'acf/load_value', [ $this, 'get_default_value' ], 10, 3 );
+		add_filter( 'acf/load_value', [ $this, 'maybe_load_untranslated_value' ], 5, 3 );
+		return $value;
 	}
 
 	/**
@@ -176,6 +226,11 @@ class Main {
 			return $future_post_id;
 		}
 
+		// When in untranslated context, use post_id without locale suffix so get_field() loads default values.
+		if ( ! empty( self::$untranslated_context_stack ) ) {
+			return $original_post_id;
+		}
+
 		if ( Helpers::already_localized( $future_post_id ) ) {
 			return $future_post_id;
 		}
@@ -191,5 +246,28 @@ class Main {
 		}
 
 		return $future_post_id;
+	}
+
+	/**
+	 * Switch context to untranslated (default) option values.
+	 * Subsequent get_field( ..., option_page_id ) will load values without locale suffix.
+	 * Must be paired with restore_current_lang().
+	 *
+	 * @since 2.0.0
+	 */
+	public static function switch_to_untranslated(): void {
+		self::$untranslated_context_stack[] = true;
+	}
+
+	/**
+	 * Restore context after switch_to_untranslated().
+	 * Option values will again be loaded for the current language.
+	 *
+	 * @since 2.0.0
+	 */
+	public static function restore_current_lang(): void {
+		if ( ! empty( self::$untranslated_context_stack ) ) {
+			array_pop( self::$untranslated_context_stack );
+		}
 	}
 }
