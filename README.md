@@ -112,6 +112,15 @@ add_filter( 'bea.aofp.get_default', function( $show_default, $post_id ) {
 }, 10, 2 );
 ```
 
+> **Note**: If you change this value dynamically or rely on the default/all languages fallback, you may sometimes need to clear ACF's internal cache so that your changes are properly recognized.  
+To do this, use:
+```php
+// Clear ACF store
+$store = acf_get_store('values');
+$store->reset();
+```
+— this will force ACF to reload the values from the database on the next request.
+
 ## Loading untranslated (default) option values
 
 When you need to read the **default / untranslated** values (the ones stored without a language suffix, used as fallback when no translation exists), use the context switch API. This applies to all fields, including repeater sub-fields and relationship fields.

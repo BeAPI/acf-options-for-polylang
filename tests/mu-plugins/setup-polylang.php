@@ -288,7 +288,6 @@ add_action(
 		);
 
 		// Block 2: default / untranslated options via plugin context switch (no locale suffix).
-		 add_filter( 'bea.aofp.get_default', '__return_false' );
 		if ( function_exists( 'bea_aofp_switch_to_untranslated' ) && function_exists( 'bea_aofp_restore_current_lang' ) ) {
 			bea_aofp_switch_to_untranslated();
 			echo bea_aofp_build_options_preview_block( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -298,7 +297,13 @@ add_action(
 			bea_aofp_restore_current_lang();
 		}
 
-		// Block 3: localized options (current language).
+		// Block 3: localized options (current language) with default fallback disabled.
+		add_filter( 'bea.aofp.get_default', '__return_false' );
+
+		// Clear ACF store
+		$store = acf_get_store( 'values' );
+		$store->reset();
+
 		echo bea_aofp_build_options_preview_block( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			BEA_AOFP_THEME_OPTIONS_POST_ID,
 			__( 'Theme options (current language)', 'bea-acf-options-for-polylang' )

@@ -2,11 +2,14 @@
 Contributors: momo360modena, BeAPI, maximeculea, NicolasKulka
 Author URI: https://beapi.fr
 Plugin URL: https://github.com/BeAPI/acf-options-for-polylang
+Donate link: https://www.paypal.me/BeAPI
 Requires at Least: 6.0
 Tested up to: 6.9
-Tags: acf, polylang, option, options, options page, advanced custom fields
+Tags: acf, polylang, options, options page, advanced custom fields
 Stable tag: 2.0.0
 Requires PHP: 7.4
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Add ACF options page support for Polylang.
 
@@ -14,91 +17,53 @@ Add ACF options page support for Polylang.
 
 Are you using Advanced Custom Fields to create option pages and have Polylang installed for your awesome multilingual website?
 
-Unfortunately, Polylang does not natively support ACF Option Pages. This results in the same values being used across all your site's languages.
+Unfortunately, Polylang does not natively support ACF Option Pages. This plugin solves that: once activated, you can set different values per language. If a value isn't set for a language, the "All languages" value is used by default.
 
-This plugin solves that problem! Once activated, you'll be able to set different values for each language. If a value isn't set for a specific language, the "All languages" value will be used by default.
+This plugin stores one value per language in the database and uses Polylang's language to load the right one. **Note:** On activation, existing option values become temporarily unavailable (but stay in the database); you can recover them by deactivating the plugin. To edit options for a language, use the Polylang language switcher in the admin bar before opening the options page.
 
-= How does it work? =
+Requirements: WordPress 6.0+, PHP 7.4–8.4, [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) 5.6.0+, [Polylang](https://polylang.pro/) (tested up to 3.7.7).
 
-This plugin saves separate values for each language in the database. Polylang's language settings are then used to fetch the appropriate value from the database.
-
-**Note:** When you activate the plugin, your existing option values will be temporarily unavailable but remain in the database. You can recover them by deactivating the plugin.
-
-To set or update your option pages in a specific language, simply use the Polylang language flags in the WordPress admin bar (the integrated language switcher) to select your desired language before editing the options.
-
-= Requirements =
-
-* [WordPress](https://wordpress.org/) 6.0+ / Tested from 6.0 to latest
-* PHP 7.4 to 8.4 / Tested from 7.4 to 8.4
-* [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) 5.6.0+
-* [Polylang](https://polylang.pro/) (tested up to 3.7.7)
-
-= Using fields =
-
-Nothing changes, we have made all the hooks for you, so no need to prefix your fields with a lang or something else. Only use ACF's helpers to get and show the fields as you did before with get_field() or the_field():
-
-`get_field( 'footer_disclaimer', 'options' );`
-
-= Excluding Option Pages from Localization =
-
-If you want to prevent this plugin from applying its functionality to a specific ACF options page, you can exclude it by adding its post_id to the exclusion filter.
-
-Add the following code to your theme or custom plugin (replace 'custom_options_page_post_id' with your actual options page post ID):
-
-[code]
-add_filter( 'bea.aofp.excluded_post_ids', function( $ids ) {
-    $ids[] = 'custom_options_page_post_id'; // Exclude this options page from localization
-    return $ids;
-}, 10, 1 );
-[/code]
-
-This will ensure that the specified options page is not affected by language-specific behavior and will always load/save its values without localization.
-
-= Default Values ("All languages" Fallback) =
-
-By default, this plugin will use the Polylang "All languages" value when there is no value set for the current language. If you prefer not to use this fallback behavior, you can easily disable it using a filter.
-
-* Disable fallback for all ACF Options pages: add `add_filter( 'bea.aofp.get_default', '__return_false' );`
-* Disable fallback for a specific ACF Options page: use the filter with the $post_id parameter to target a single options page.
-
-= Loading untranslated (default) option values =
-
-When you need to read the default / untranslated values (the ones stored without a language suffix, used as fallback when no translation exists), use the context switch API. This applies to all fields, including repeater sub-fields and relationship fields.
-
-* **bea_aofp_switch_to_untranslated()** — subsequent get_field( ..., option_page_id ) and have_rows( ..., option_page_id ) will load values from the unsuffixed key (default values).
-* **bea_aofp_restore_current_lang()** — restores the previous context; option values are again loaded for the current language.
-
-Calls can be nested: each restore_current_lang() undoes the last switch_to_untranslated().
-
-= Who? =
-
-Created by [Be API](https://beapi.fr), the French WordPress leader agency since 2009. Based in Paris, we are more than 30 people and always [hiring](https://beapi.workable.com) some fun and talented guys. So we will be pleased to work with you.
-
-This plugin is only maintained, which means we do not guarantee some free support. Consider reporting an [issue](https://github.com/BeAPI/acf-options-for-polylang/issues) and be patient.
-
-If you really like what we do or want to thank us for our quick work, feel free to [donate](https://www.paypal.me/BeAPI) as much as you want / can, even 1€ is a great gift for buying coffee :)
-
-BEA - ACF Options for Polylang is licensed under the GPLv2 or later.
+For full documentation (usage, filters, API, excluding pages, default fallback, loading untranslated values), see the [project README on GitHub](https://github.com/BeAPI/acf-options-for-polylang#readme).
 
 == Installation ==
 
-First activate and configure Polylang on your site. Then activate ACF Options For Polylang to handle ACF Options in Polylang's configured languages.
+Activate and configure Polylang, then activate ACF Options For Polylang.
 
 = WordPress =
 
-* Download and install using the built-in WordPress plugin installer.
-* Site activate in the "Plugins" area of the admin.
-* Optionally drop the entire `acf-options-for-polylang` directory into mu-plugins.
-* Nothing more, this plugin is ready to use!
+* Install via the built-in plugin installer, then activate in the "Plugins" screen.
+* Or place the `acf-options-for-polylang` folder in `wp-content/mu-plugins`.
 
 = Composer =
 
 * `composer require wpackagist-plugin/acf-options-for-polylang`
-* Nothing more, this plugin is ready to use!
+
+== Frequently Asked Questions ==
+
+= Do I need to change my theme code to use this plugin? =
+
+No. Use ACF's get_field() and the_field() as before with the options page ID (e.g. 'options'). The plugin handles language automatically.
+
+= What happens to my existing option values when I activate the plugin? =
+
+They become temporarily unavailable but remain in the database. You can recover them by deactivating the plugin. After activation, set or copy your values per language using the Polylang language switcher in the admin bar.
+
+= Where is the full documentation (filters, API, excluding pages)? =
+
+See the [README on GitHub](https://github.com/BeAPI/acf-options-for-polylang#readme).
+
+== Screenshots ==
+
+1. Use the Polylang language switcher in the admin bar to choose the language before editing ACF options.
+
+== Upgrade Notice ==
+
+= 2.0.0 =
+Breaking: requires PHP 7.4+ and WordPress 6.0+. See Changelog for full details.
 
 == Changelog ==
 
-= 2.0.0 - In Development =
+= 2.0.0 – In Development =
 
 **⚠️ Breaking Changes**
 * Minimum PHP version raised from 5.6 to 7.4
@@ -125,65 +90,65 @@ First activate and configure Polylang on your site. Then activate ACF Options Fo
 * Code coverage reporting with Codecov
 * Automated code quality checks
 
-= 1.1.12 - 26 March 2025 =
-- FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
+= 1.1.12 – 26 March 2025 =
+– FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
 
-= 1.1.11 - 27 July 2023
-- Tested up on WP 6.2
+= 1.1.11 – 27 July 2023
+– Tested up on WP 6.2
 
-= 1.1.10 - 1 Sept 2021
-- FIX: WordPress.org version generation
+= 1.1.10 – 1 Sept 2021
+– FIX: WordPress.org version generation
 
-= 1.1.9 - 1 Sept 2021
-- FIX: ACF 5.6.0 version check
-- FEATURE: Add new filter bea.aofp.excluded_post_ids to skip page ids
+= 1.1.9 – 1 Sept 2021
+– FIX: ACF 5.6.0 version check
+– FEATURE: Add new filter bea.aofp.excluded_post_ids to skip page ids
 
 
-= 1.1.8 - 27 March 2021
-- FIX : Rest API returns now the right value
-- FIX : Ajax requests where not localized
-- FIX : Compatibility with new versions of ACF
+= 1.1.8 – 27 March 2021
+– FIX : Rest API returns now the right value
+– FIX : Ajax requests where not localized
+– FIX : Compatibility with new versions of ACF
 
-= 1.1.7 - 07 May 2019 =
-- Feature: Add a context-sensitive help to the user on ACF options page (tired of updating the generic options ...)
-- Improve: object detection from ACF with get_field()
-- Feature: Add translation POT and french translation
-- FEATURE [#31](https://github.com/BeAPI/acf-options-for-polylang/issues/31): Brand for wp.org
-- Test: Test up on WP 5.2
-- FIX [#41](https://github.com/BeAPI/acf-options-for-polylang/issues/41): fix bug with all language failback and repeater
+= 1.1.7 – 07 May 2019 =
+– Feature: Add a context-sensitive help to the user on ACF options page (tired of updating the generic options …)
+– Improve: object detection from ACF with get_field()
+– Feature: Add translation POT and french translation
+– FEATURE [#31](https://github.com/BeAPI/acf-options-for-polylang/issues/31): Brand for wp.org
+– Test: Test up on WP 5.2
+– FIX [#41](https://github.com/BeAPI/acf-options-for-polylang/issues/41): fix bug with all language failback and repeater
 
-= 1.1.6 - 19 Mar 2019 =
-- FIX [#32](https://github.com/BeAPI/acf-options-for-polylang/issues/32) & [#40](https://github.com/BeAPI/acf-options-for-polylang/issues/40) : fix `get_field()` if an object is provided (WP Term, WP Post, WP Comment)
+= 1.1.6 – 19 Mar 2019 =
+– FIX [#32](https://github.com/BeAPI/acf-options-for-polylang/issues/32) & [#40](https://github.com/BeAPI/acf-options-for-polylang/issues/40) : fix `get_field()` if an object is provided (WP Term, WP Post, WP Comment)
 
-= 1.1.5 - 11 Dec 2018 =
-- FIX wrong constant
+= 1.1.5 – 11 Dec 2018 =
+– FIX wrong constant
 
-= 1.1.4 - 13 Nov 2018 =
-- Refactor by adding the Helpers class
-- FEATURE [#26](https://github.com/BeAPI/acf-options-for-polylang/issues/26) : allow to precise to show or hide default values for a specific option page
-- FEATURE [#21](https://github.com/BeAPI/acf-options-for-polylang/pull/21) : handle custom option id
+= 1.1.4 – 13 Nov 2018 =
+– Refactor by adding the Helpers class
+– FEATURE [#26](https://github.com/BeAPI/acf-options-for-polylang/issues/26) : allow to precise to show or hide default values for a specific option page
+– FEATURE [#21](https://github.com/BeAPI/acf-options-for-polylang/pull/21) : handle custom option id
 
-= 1.1.3 - 2 Aug 2018 =
-- FEATURE [#23](https://github.com/BeAPI/acf-options-for-polylang/pull/23) : requirement to php5.6 whereas namespace are 5.3
+= 1.1.3 – 2 Aug 2018 =
+– FEATURE [#23](https://github.com/BeAPI/acf-options-for-polylang/pull/23) : requirement to php5.6 whereas namespace are 5.3
 
-= 1.1.2 - 31 Jul 2018 =
-- FIX [#22](https://github.com/BeAPI/acf-options-for-polylang/pull/22) : error with repeater fields default values
+= 1.1.2 – 31 Jul 2018 =
+– FIX [#22](https://github.com/BeAPI/acf-options-for-polylang/pull/22) : error with repeater fields default values
 
-= 1.1.1 - 9 Mai 2018 =
-- FIX [#15](https://github.com/BeAPI/acf-options-for-polylang/issues/15) : way requirements are checked to trigger on front / admin
+= 1.1.1 – 9 Mai 2018 =
+– FIX [#15](https://github.com/BeAPI/acf-options-for-polylang/issues/15) : way requirements are checked to trigger on front / admin
 
-= 1.1.0 - Mar 2018 =
-- True (complet) plugin.
-- Add check for ACF 5.6.
+= 1.1.0 – Mar 2018 =
+– True (complet) plugin.
+– Add check for ACF 5.6.
 
-= 1.0.2 - 23 Dec 2017 =
-- Refactor and reformat.
-- Handle all options page and custom post_id.
-- Now load only if ACF & Polylang are activated.
-- Load later at plugins loaded.
+= 1.0.2 – 23 Dec 2017 =
+– Refactor and reformat.
+– Handle all options page and custom post_id.
+– Now load only if ACF & Polylang are activated.
+– Load later at plugins loaded.
 
-= 1.0.1 - 19 Sep 2016 =
-- Plugin update.
+= 1.0.1 – 19 Sep 2016 =
+– Plugin update.
 
-= 1.0.0 - 8 Mar 2016 =
-- Init plugin.
+= 1.0.0 – 8 Mar 2016 =
+– Init plugin.
