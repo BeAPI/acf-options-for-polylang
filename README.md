@@ -4,11 +4,11 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/beapi/acf-options-for-polylang/badge)](https://www.codefactor.io/repository/github/beapi/acf-options-for-polylang)
 
-Are you using Advanced Custom Fields to create option pages and have Polylang installed for your awesome multilingual website?
+Are you using Advanced Custom Fields for option pages and Polylang for your multilingual site?
 
-Unfortunately, Polylang does not natively support ACF Option Pages. This results in the same values being used across all your site's languages.
+Polylang does not natively support ACF Option Pages, so option values are shared across all languages.
 
-This plugin solves that problem! Once activated, you’ll be able to set different values for each language. If a value isn’t set for a specific language, the “All languages” value will be used by default.
+This plugin improves that: Once activated, you’ll be able to set different values for each language. If a value isn’t set for a specific language, the “All languages” value will be used by default.
 
 # How does it work?
 

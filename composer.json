@@ -1,6 +1,6 @@
 {
 	"name":"bea/acf-options-for-polylang",
-	"description":"Add ACF options page support for Polylang.",
+	"description":"Improves Polylang by adding per-language support for ACF options pages—each language can have its own option values.",
 	"keywords":[
 		"acf-options",
 		"polylang",

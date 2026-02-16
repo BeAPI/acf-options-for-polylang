@@ -5,21 +5,21 @@ Plugin URL: https://github.com/BeAPI/acf-options-for-polylang
 Donate link: https://www.paypal.me/BeAPI
 Requires at Least: 6.0
 Tested up to: 6.9
-Tags: acf, polylang, options, options page, advanced custom fields
+Tags: acf, polylang, option, options, options page
 Stable tag: 2.0.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Add ACF options page support for Polylang.
+Improves Polylang by adding per-language support for ACF options pages—each language can have its own option values.
 
 == Description ==
 
-Are you using Advanced Custom Fields to create option pages and have Polylang installed for your awesome multilingual website?
+Are you using Advanced Custom Fields for option pages and Polylang for your multilingual site?
 
-Unfortunately, Polylang does not natively support ACF Option Pages. This plugin solves that: once activated, you can set different values per language. If a value isn't set for a language, the "All languages" value is used by default.
+Polylang does not natively support ACF Option Pages, so option values are shared across all languages. This plugin improves that: once activated, you can set different values per language. Values are stored per language in the database and the correct one is loaded according to the current Polylang language. If a value isn't set for a language, the "All languages" value is used by default.
 
-This plugin stores one value per language in the database and uses Polylang's language to load the right one. **Note:** On activation, existing option values become temporarily unavailable (but stay in the database); you can recover them by deactivating the plugin. To edit options for a language, use the Polylang language switcher in the admin bar before opening the options page.
+**Note:** On activation, existing option values become temporarily unavailable (but remain in the database); you can recover them by deactivating the plugin. To edit options for a language, use the Polylang language switcher in the admin bar before opening the options page.
 
 Requirements: WordPress 6.0+, PHP 7.4–8.4, [Advanced Custom Fields](https://www.advancedcustomfields.com/pro) 5.6.0+, [Polylang](https://polylang.pro/) (tested up to 3.7.7).
 
@@ -63,26 +63,27 @@ Breaking: requires PHP 7.4+ and WordPress 6.0+. See Changelog for full details.
 
 == Changelog ==
 
-= 2.0.0 – In Development =
+= 2.0.0 - 16 February 2025 =
 
-**⚠️ Breaking Changes**
+**Breaking Changes**
 * Minimum PHP version raised from 5.6 to 7.4
 * Minimum WordPress version raised from 4.7 to 6.0
 
 **New Features**
-* Add comprehensive unit testing suite with PHPUnit (41 test methods)
-* Add wp-env configuration for Docker-based testing environment
-* Add GitHub Actions CI/CD workflows for automated testing
+* Added comprehensive unit testing suite with PHPUnit (41 test methods)
+* Added wp-env configuration for Docker-based testing environment
+* Added GitHub Actions CI/CD workflows for automated testing
 * Test coverage across PHP 7.4-8.4 and WordPress 6.0-6.9
-* Add TESTING.md documentation for developers
+* Added TESTING.md documentation for developers
 
 **Improvements**
-* Update all development dependencies to latest versions
+* Updated all development dependencies to latest versions
 * WordPress Coding Standards 3.1 (WP 6.0+ support)
 * PHPUnit 9.6/10.0/11.0 multi-version support
-* Enforce modern short array syntax []
-* Update plugin header with all standard WordPress fields
-* Update copyright to 2025
+* Enforced modern short array syntax []
+* Updated plugin header with all standard WordPress fields
+* Updated copyright to 2025
+* Removed custom PHP version check and compat.php; PHP requirement is now enforced by WordPress Requires PHP header
 
 **Code Quality**
 * 100% compliance with WordPress Coding Standards
