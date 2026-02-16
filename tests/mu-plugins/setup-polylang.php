@@ -145,6 +145,20 @@ add_action(
 						'ui'            => 1,
 					],
 					[
+						'key'           => 'field_gallery',
+						'label'         => 'Gallery',
+						'name'          => 'gallery',
+						'type'          => 'gallery',
+						'instructions'  => 'Images for manual testing (per-language).',
+						'required'      => 0,
+						'return_format' => 'array',
+						'library'       => 'all',
+						'min'           => 0,
+						'max'           => 10,
+						'insert'        => 'append',
+						'preview_size'  => 'medium',
+					],
+					[
 						'key'        => 'field_links_repeater',
 						'label'       => 'Links',
 						'name'       => 'links',
@@ -212,11 +226,37 @@ function bea_aofp_build_options_preview_block( $post_id, $title ) {
 	$site_description = get_field( 'site_description', $post_id );
 	$contact_email    = get_field( 'contact_email', $post_id );
 	$enable_feature   = get_field( 'enable_feature', $post_id );
+	$gallery          = get_field( 'gallery', $post_id );
 
 	$site_title       = is_string( $site_title ) ? $site_title : '';
 	$site_description = is_string( $site_description ) ? $site_description : '';
 	$contact_email    = is_string( $contact_email ) ? $contact_email : '';
 	$enable_feature   = (bool) $enable_feature;
+	$gallery          = is_array( $gallery ) ? $gallery : [];
+
+	$gallery_html = '';
+	if ( ! empty( $gallery ) ) {
+		$gallery_html = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0.25em 0;">';
+		foreach ( $gallery as $image ) {
+			if ( ! is_array( $image ) ) {
+				continue;
+			}
+			$url = isset( $image['sizes']['thumbnail'] ) ? $image['sizes']['thumbnail'] : ( $image['url'] ?? '' );
+			if ( empty( $url ) || ! is_string( $url ) ) {
+				continue;
+			}
+			$alt = isset( $image['alt'] ) ? $image['alt'] : '';
+			$gallery_html .= sprintf(
+				'<img src="%s" alt="%s" style="max-width:80px;height:auto;border:1px solid #ddd;border-radius:4px;" loading="lazy" />',
+				esc_url( $url ),
+				esc_attr( $alt )
+			);
+		}
+		$gallery_html .= '</div>';
+		$gallery_html  = '<dt style="font-weight:600;">Gallery</dt><dd>' . $gallery_html . '</dd>';
+	} else {
+		$gallery_html = '<dt style="font-weight:600;">Gallery</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
+	}
 
 	$links_html = '';
 	if ( have_rows( 'links', $post_id ) ) :
@@ -264,12 +304,14 @@ function bea_aofp_build_options_preview_block( $post_id, $title ) {
 		. '<dt style="font-weight:600;">Contact Email</dt><dd>%s</dd>'
 		. '<dt style="font-weight:600;">Enable Feature</dt><dd>%s</dd>'
 		. '%s'
+		. '%s'
 		. '</dl></div>',
 		esc_html( $title ),
 		esc_html( $site_title ),
 		esc_html( $site_description ),
 		esc_html( $contact_email ),
 		$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' ),
+		$gallery_html, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		$links_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	);
 }
