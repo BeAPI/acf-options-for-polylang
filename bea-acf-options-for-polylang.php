@@ -42,6 +42,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Plugin constants
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_VERSION', '2.0.0' );
 
+/**
+ * Polylang language attribute used for option key suffix (e.g. 'locale' → fr_FR, 'slug' → fr).
+ * Define before loading the plugin (e.g. in wp-config.php) to override; otherwise use filter.
+ *
+ * @since 2.0.0
+ */
+if ( ! defined( 'BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE' ) ) {
+	define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE', 'locale' );
+}
+
 // Plugin URL and PATH
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_URL', plugin_dir_url( __FILE__ ) );
 define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_DIR', plugin_dir_path( __FILE__ ) );

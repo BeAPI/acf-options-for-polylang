@@ -87,6 +87,26 @@ add_filter( 'bea.aofp.excluded_post_ids', function( $ids ) {
 
 This will ensure that the specified options page is not affected by language-specific behavior and will always load/save its values without localization.
 
+## Language attribute for option key suffix
+
+By default, the plugin uses Polylang’s **locale** (e.g. `fr_FR`, `en_US`) as the suffix for option keys. You can switch to **slug** (e.g. `fr`, `en`) or another Polylang language field.
+
+**Option 1 – Constant** (e.g. in `wp-config.php`, before the plugin loads):
+
+```php
+define( 'BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE', 'slug' );
+```
+
+**Option 2 – Filter** (in theme or plugin):
+
+```php
+add_filter( 'bea.aofp.lang_attribute', function( $attribute ) {
+    return 'slug'; // or 'locale', 'name', etc.
+} );
+```
+
+The value must be a valid Polylang attribute for `pll_current_language()` / `pll_languages_list()` (e.g. `locale`, `slug`, `name`).
+
 ## Default Values (“All languages” Fallback)
 
 By default, this plugin will use the Polylang “All languages” value when there is no value set for the current language. If you prefer not to use this fallback behavior, you can easily disable it using a filter.

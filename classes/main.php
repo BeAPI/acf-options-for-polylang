@@ -73,7 +73,7 @@ class Main {
 	}
 
 	/**
-	 * Get the current Polylang's locale or the wp's one
+	 * Get the current Polylang language value (locale, slug, etc.) or the wp's locale.
 	 *
 	 * @return bool|string
 	 * @author Maxime CULEA
@@ -81,7 +81,7 @@ class Main {
 	 */
 	public function set_current_site_lang() {
 		if ( ! defined( 'REST_API' ) && function_exists( 'pll_current_language' ) ) {
-			return \pll_current_language( 'locale' );
+			return \pll_current_language( Helpers::get_lang_attribute() );
 		}
 
 		return \get_locale();

@@ -70,6 +70,7 @@ Breaking: requires PHP 7.4+ and WordPress 6.0+. See Changelog for full details.
 * Minimum WordPress version raised from 4.7 to 6.0
 
 **New Features**
+* Configurable Polylang language attribute for option key suffix: constant BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE, helper Helpers::get_lang_attribute(), and filter bea.aofp.lang_attribute allow using slug (or other Polylang fields) instead of default locale
 * Added comprehensive unit testing suite with PHPUnit (41 test methods)
 * Added wp-env configuration for Docker-based testing environment
 * Added GitHub Actions CI/CD workflows for automated testing
@@ -84,6 +85,9 @@ Breaking: requires PHP 7.4+ and WordPress 6.0+. See Changelog for full details.
 * Updated plugin header with all standard WordPress fields
 * Updated copyright to 2025
 * Removed custom PHP version check and compat.php; PHP requirement is now enforced by WordPress Requires PHP header
+
+**Documentation**
+* Documented language attribute override (constant and filter) in README
 
 **Code Quality**
 * 100% compliance with WordPress Coding Standards

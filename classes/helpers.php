@@ -4,11 +4,35 @@ namespace BEA\ACF_Options_For_Polylang;
 
 class Helpers {
 	/**
-	 * Cached regex fragment for Polylang locales (e.g. (fr_FR|en_US)).
+	 * Cached regex fragment for Polylang language values, keyed by attribute (e.g. 'locale' => (fr_FR|en_US)).
 	 *
-	 * @var string|null
+	 * @var array<string, string>
 	 */
-	private static $locales_regex_fragment_cache = null;
+	private static $locales_regex_fragment_cache = [];
+
+	/**
+	 * Returns the Polylang language attribute used for option key suffix (e.g. 'locale', 'slug').
+	 * Overridable via constant BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE or filter.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @return string Polylang pll_current_language() / pll_languages_list() field (e.g. 'locale', 'slug').
+	 */
+	public static function get_lang_attribute(): string {
+		$default = defined( 'BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE' )
+			? BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE
+			: 'locale';
+
+		/**
+		 * Filters the Polylang language attribute used for option key suffix.
+		 *
+		 * @since 2.0.0
+		 * @param string $attribute Attribute passed to pll_current_language() / pll_languages_list() (e.g. 'locale', 'slug').
+		 */
+		$attribute = apply_filters( 'bea.aofp.lang_attribute', $default );
+
+		return is_string( $attribute ) && '' !== $attribute ? $attribute : 'locale';
+	}
 
 	/**
 	 * Get the original option id without language attributes
@@ -41,12 +65,12 @@ class Helpers {
 		// Replace 'option' with 'options'
 		$processed_post_id = ( 'option' === $processed_post_id ) ? 'options' : $processed_post_id;
 
-		// Remove the locale suffix from $processed_post_id (only string/array to avoid PHP 8.1+ null deprecation)
+		// Remove the language suffix from $processed_post_id (only string/array to avoid PHP 8.1+ null deprecation)
 		if ( function_exists( 'pll_current_language' ) ) {
 			if ( ! is_string( $processed_post_id ) && ! is_array( $processed_post_id ) ) {
 				return 0;
 			}
-			return str_replace( sprintf( '_%s', \pll_current_language( 'locale' ) ), '', $processed_post_id );
+			return str_replace( sprintf( '_%s', \pll_current_language( self::get_lang_attribute() ) ), '', $processed_post_id );
 		}
 
 		return $processed_post_id;
@@ -125,18 +149,19 @@ class Helpers {
 	}
 
 	/**
-	 * Returns a regex fragment matching all Polylang configured locales (e.g. (fr_FR|en_US)).
-	 * Result is cached per request.
+	 * Returns a regex fragment matching all Polylang configured language values (e.g. (fr_FR|en_US) or (fr|en)).
+	 * Result is cached per request and per lang attribute.
 	 *
 	 * @return string Regex fragment including parentheses, or empty string if none.
 	 */
 	public static function locales_regex_fragment(): string {
-		if ( null !== self::$locales_regex_fragment_cache ) {
-			return self::$locales_regex_fragment_cache;
+		$attribute = self::get_lang_attribute();
+		if ( isset( self::$locales_regex_fragment_cache[ $attribute ] ) ) {
+			return self::$locales_regex_fragment_cache[ $attribute ];
 		}
 
 		if ( ! function_exists( 'pll_languages_list' ) ) {
-			self::$locales_regex_fragment_cache = '';
+			self::$locales_regex_fragment_cache[ $attribute ] = '';
 
 			return '';
 		}
@@ -144,11 +169,11 @@ class Helpers {
 		$locales = pll_languages_list(
 			[
 				'hide_empty' => false,
-				'fields' => 'locale',
+				'fields'     => $attribute,
 			]
 		);
 		if ( ! $locales || ! is_array( $locales ) ) {
-			self::$locales_regex_fragment_cache = '';
+			self::$locales_regex_fragment_cache[ $attribute ] = '';
 
 			return '';
 		}
@@ -162,7 +187,7 @@ class Helpers {
 				$locales
 			)
 		) . ')';
-		self::$locales_regex_fragment_cache = $fragment;
+		self::$locales_regex_fragment_cache[ $attribute ] = $fragment;
 
 		return $fragment;
 	}

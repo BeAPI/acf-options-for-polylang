@@ -8,6 +8,7 @@
 * **BREAKING**: Updated plugin header with modern WordPress standards
 
 ### ✨ New Features
+* Added configurable Polylang language attribute for option key suffix: constant `BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE`, helper `Helpers::get_lang_attribute()`, and filter `bea.aofp.lang_attribute` allow using `slug` (or other Polylang fields) instead of default `locale`
 * Added comprehensive unit testing suite with PHPUnit
 * Added wp-env configuration for Docker-based testing environment
 * Added GitHub Actions workflow for automated testing (66 PHP/WP combinations)
@@ -50,6 +51,7 @@
 * Converted array() syntax to short [] syntax throughout codebase
 
 ### 📚 Documentation
+* Documented language attribute override (constant and filter) in README.md
 * Added comprehensive TESTING.md with setup and usage instructions
 * Added test coverage documentation
 * Added contribution guidelines for tests

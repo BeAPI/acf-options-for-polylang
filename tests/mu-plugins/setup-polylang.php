@@ -14,6 +14,12 @@
  */
 const BEA_AOFP_THEME_OPTIONS_POST_ID = 'theme-general-settings';
 
+/*
+add_filter( 'bea.aofp.lang_attribute', function( $attribute ) {
+	return 'slug'; // or 'locale', 'name', etc.
+} );
+*/
+
 /**
  * Setup Polylang languages.
  */
