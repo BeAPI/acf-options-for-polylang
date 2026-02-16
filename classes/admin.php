@@ -41,6 +41,9 @@ class Admin {
 			$output = __( '<strong>Be careful</strong>, you are going to modify the untranslated options, they will probably be used as defaults if the translation is not completed.', 'bea-acf-options-for-polylang' );
 		}
 
+		$switcher_hint = __( 'Use the language switcher in the admin bar to change the language.', 'bea-acf-options-for-polylang' );
+		$output       = $output . ' <br /><br />' . $switcher_hint;
+
 		echo '<p class="misc-pub-section">' . $output . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 }

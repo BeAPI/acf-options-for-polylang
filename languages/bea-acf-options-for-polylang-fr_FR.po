@@ -5,25 +5,25 @@ msgstr ""
 "Project-Id-Version: ACF Options for Polylang 1.1.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/acf-options-for-"
 "polylang\n"
-"POT-Creation-Date: 2019-05-07 06:12+0200\n"
-"PO-Revision-Date: 2019-05-07 06:13+0200\n"
+"POT-Creation-Date: 2026-02-16 09:59+0100\n"
+"PO-Revision-Date: 2026-02-16 09:59+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
-"X-Domain: bea-acf-options-for-polylang\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 3.2.2\n"
+"X-Domain: bea-acf-options-for-polylang\n"
 
 #. translators: %s: current language name
-#: classes/admin.php:32
+#: classes/admin.php:39
 #, php-format
 msgid "You are changing the options for language %s"
 msgstr "Vous changez les options pour la langue %s"
 
-#: classes/admin.php:34
+#: classes/admin.php:41
 msgid ""
 "<strong>Be careful</strong>, you are going to modify the untranslated "
 "options, they will probably be used as defaults if the translation is not "
@@ -33,6 +33,12 @@ msgstr ""
 "traduites, elles seront probablement utilisées comme valeurs par défaut si "
 "la traduction n’est pas terminée."
 
+#: classes/admin.php:44
+msgid "Use the language switcher in the admin bar to change the language."
+msgstr ""
+"Utilisez le sélecteur de langue dans la barre d'administration pour changer "
+"la langue."
+
 #: classes/requirements.php:16
 msgid "Advanced Custom Fields and Polylang are required plugins."
 msgstr "Les extensions Advanced Custom Fields et Polylang sont requises."
@@ -40,6 +46,40 @@ msgstr "Les extensions Advanced Custom Fields et Polylang sont requises."
 #: classes/requirements.php:22
 msgid "Advanced Custom Fields should be on version 5.6.0 or above."
 msgstr "Advanced Custom Fields doit être sur la version 5.6.0 ou supérieure."
+
+#: tests/mu-plugins/setup-polylang.php:91
+msgid "Theme General Settings"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:92
+msgid "Theme Settings"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:258
+#: tests/mu-plugins/setup-polylang.php:295
+msgid "None"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:277
+msgid "Related"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:313
+msgid "Yes"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:313
+msgid "No"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:335
+#: tests/mu-plugins/setup-polylang.php:357
+msgid "Theme options (current language)"
+msgstr ""
+
+#: tests/mu-plugins/setup-polylang.php:343
+msgid "Theme options (default / untranslated)"
+msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "ACF Options for Polylang"
@@ -50,8 +90,12 @@ msgid "https://github.com/BeAPI/acf-options-for-polylang"
 msgstr "https://github.com/BeAPI/acf-options-for-polylang"
 
 #. Description of the plugin/theme
-msgid "Add ACF options page support for Polylang."
-msgstr "Ajout de la prise en charge des pages d’options ACF pour Polylang."
+msgid ""
+"Improves Polylang by adding per-language support for ACF options pages—each "
+"language can have its own option values."
+msgstr ""
+"Améliore Polylang en ajoutant la prise en charge par langue des pages "
+"d'options ACF : chaque langue peut avoir ses propres valeurs d'options."
 
 #. Author of the plugin/theme
 msgid "Be API"
@@ -60,3 +104,6 @@ msgstr "Be API"
 #. Author URI of the plugin/theme
 msgid "https://beapi.fr"
 msgstr "https://beapi.fr"
+
+#~ msgid "Add ACF options page support for Polylang."
+#~ msgstr "Ajout de la prise en charge des pages d’options ACF pour Polylang."
