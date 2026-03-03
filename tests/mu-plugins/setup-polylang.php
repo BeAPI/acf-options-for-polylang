@@ -2,6 +2,14 @@
 /**
  * Setup test environment for ACF Options for Polylang
  *
+ * Prevent double-loading when mapped as mu-plugin and also present inside the plugin directory.
+ */
+if ( defined( 'BEA_AOFP_TEST_SETUP_LOADED' ) ) {
+	return;
+}
+define( 'BEA_AOFP_TEST_SETUP_LOADED', true );
+
+/**
  * This mu-plugin:
  * - Creates French and English languages for Polylang
  * - Registers an ACF options page for testing (custom option key, not default 'options')
@@ -221,100 +229,102 @@ add_action(
  * @param string $title    Block title.
  * @return string HTML for the block.
  */
-function bea_aofp_build_options_preview_block( $post_id, $title ) {
-	$site_title       = get_field( 'site_title', $post_id );
-	$site_description = get_field( 'site_description', $post_id );
-	$contact_email    = get_field( 'contact_email', $post_id );
-	$enable_feature   = get_field( 'enable_feature', $post_id );
-	$gallery          = get_field( 'gallery', $post_id );
+if ( ! function_exists( 'bea_aofp_build_options_preview_block' ) ) :
+	function bea_aofp_build_options_preview_block( $post_id, $title ) {
+		$site_title       = get_field( 'site_title', $post_id );
+		$site_description = get_field( 'site_description', $post_id );
+		$contact_email    = get_field( 'contact_email', $post_id );
+		$enable_feature   = get_field( 'enable_feature', $post_id );
+		$gallery          = get_field( 'gallery', $post_id );
 
-	$site_title       = is_string( $site_title ) ? $site_title : '';
-	$site_description = is_string( $site_description ) ? $site_description : '';
-	$contact_email    = is_string( $contact_email ) ? $contact_email : '';
-	$enable_feature   = (bool) $enable_feature;
-	$gallery          = is_array( $gallery ) ? $gallery : [];
+		$site_title       = is_string( $site_title ) ? $site_title : '';
+		$site_description = is_string( $site_description ) ? $site_description : '';
+		$contact_email    = is_string( $contact_email ) ? $contact_email : '';
+		$enable_feature   = (bool) $enable_feature;
+		$gallery          = is_array( $gallery ) ? $gallery : [];
 
-	$gallery_html = '';
-	if ( ! empty( $gallery ) ) {
-		$gallery_html = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0.25em 0;">';
-		foreach ( $gallery as $image ) {
-			if ( ! is_array( $image ) ) {
-				continue;
-			}
-			$url = isset( $image['sizes']['thumbnail'] ) ? $image['sizes']['thumbnail'] : ( $image['url'] ?? '' );
-			if ( empty( $url ) || ! is_string( $url ) ) {
-				continue;
-			}
-			$alt = isset( $image['alt'] ) ? $image['alt'] : '';
-			$gallery_html .= sprintf(
-				'<img src="%s" alt="%s" style="max-width:80px;height:auto;border:1px solid #ddd;border-radius:4px;" loading="lazy" />',
-				esc_url( $url ),
-				esc_attr( $alt )
-			);
-		}
-		$gallery_html .= '</div>';
-		$gallery_html  = '<dt style="font-weight:600;">Gallery</dt><dd>' . $gallery_html . '</dd>';
-	} else {
-		$gallery_html = '<dt style="font-weight:600;">Gallery</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
-	}
-
-	$links_html = '';
-	if ( have_rows( 'links', $post_id ) ) :
-		$links_html = '<ul style="margin:0;padding-left:1.2em;">';
-		while ( have_rows( 'links', $post_id ) ) :
-			the_row();
-			$label        = get_sub_field( 'label' );
-			$url          = get_sub_field( 'url' );
-			$related_post = get_sub_field( 'related_post' );
-			$label        = is_string( $label ) ? $label : '';
-			$url          = is_string( $url ) ? $url : '';
-			$related_html = '';
-			if ( ! empty( $related_post ) ) {
-				$post_obj = is_array( $related_post ) ? reset( $related_post ) : $related_post;
-				if ( $post_obj instanceof \WP_Post ) {
-					$related_html = sprintf(
-						' <span style="color:#666;">(%s: <a href="%s">%s</a>)</span>',
-						esc_html__( 'Related', 'bea-acf-options-for-polylang' ),
-						esc_url( get_permalink( $post_obj ) ),
-						esc_html( get_the_title( $post_obj ) )
-					);
+		$gallery_html = '';
+		if ( ! empty( $gallery ) ) {
+			$gallery_html = '<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0.25em 0;">';
+			foreach ( $gallery as $image ) {
+				if ( ! is_array( $image ) ) {
+					continue;
 				}
+				$url = isset( $image['sizes']['thumbnail'] ) ? $image['sizes']['thumbnail'] : ( $image['url'] ?? '' );
+				if ( empty( $url ) || ! is_string( $url ) ) {
+					continue;
+				}
+				$alt = isset( $image['alt'] ) ? $image['alt'] : '';
+				$gallery_html .= sprintf(
+					'<img src="%s" alt="%s" style="max-width:80px;height:auto;border:1px solid #ddd;border-radius:4px;" loading="lazy" />',
+					esc_url( $url ),
+					esc_attr( $alt )
+				);
 			}
-			if ( $label || $url || $related_html ) {
-				$links_html .= '<li>';
-				$links_html .= $url
+			$gallery_html .= '</div>';
+			$gallery_html  = '<dt style="font-weight:600;">Gallery</dt><dd>' . $gallery_html . '</dd>';
+		} else {
+			$gallery_html = '<dt style="font-weight:600;">Gallery</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
+		}
+
+		$links_html = '';
+		if ( have_rows( 'links', $post_id ) ) :
+			$links_html = '<ul style="margin:0;padding-left:1.2em;">';
+			while ( have_rows( 'links', $post_id ) ) :
+				the_row();
+				$label        = get_sub_field( 'label' );
+				$url          = get_sub_field( 'url' );
+				$related_post = get_sub_field( 'related_post' );
+				$label        = is_string( $label ) ? $label : '';
+				$url          = is_string( $url ) ? $url : '';
+				$related_html = '';
+				if ( ! empty( $related_post ) ) {
+					$post_obj = is_array( $related_post ) ? reset( $related_post ) : $related_post;
+					if ( $post_obj instanceof \WP_Post ) {
+						$related_html = sprintf(
+							' <span style="color:#666;">(%s: <a href="%s">%s</a>)</span>',
+							esc_html__( 'Related', 'bea-acf-options-for-polylang' ),
+							esc_url( get_permalink( $post_obj ) ),
+							esc_html( get_the_title( $post_obj ) )
+						);
+					}
+				}
+				if ( $label || $url || $related_html ) {
+					$links_html .= '<li>';
+					$links_html .= $url
 					? sprintf( '<a href="%s">%s</a>', esc_url( $url ), esc_html( $label ?: $url ) )
 					: esc_html( $label );
-				$links_html .= $related_html;
-				$links_html .= '</li>';
-			}
-		endwhile;
-		$links_html .= '</ul>';
-		$links_html  = '<dt style="font-weight:600;">Links</dt><dd>' . $links_html . '</dd>';
-	else :
-		$links_html = '<dt style="font-weight:600;">Links</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
-	endif;
+					$links_html .= $related_html;
+					$links_html .= '</li>';
+				}
+			endwhile;
+			$links_html .= '</ul>';
+			$links_html  = '<dt style="font-weight:600;">Links</dt><dd>' . $links_html . '</dd>';
+		else :
+			$links_html = '<dt style="font-weight:600;">Links</dt><dd>' . esc_html__( 'None', 'bea-acf-options-for-polylang' ) . '</dd>';
+		endif;
 
-	return sprintf(
-		'<div class="theme-options-preview" style="margin:1em 0;padding:1em;border:1px solid #ccc;background:#f9f9f9;font-size:0.9em;">'
-		. '<strong>%s</strong>'
-		. '<dl style="margin:0.5em 0 0;display:grid;gap:0.25em;">'
-		. '<dt style="font-weight:600;">Site Title</dt><dd>%s</dd>'
-		. '<dt style="font-weight:600;">Site Description</dt><dd>%s</dd>'
-		. '<dt style="font-weight:600;">Contact Email</dt><dd>%s</dd>'
-		. '<dt style="font-weight:600;">Enable Feature</dt><dd>%s</dd>'
-		. '%s'
-		. '%s'
-		. '</dl></div>',
-		esc_html( $title ),
-		esc_html( $site_title ),
-		esc_html( $site_description ),
-		esc_html( $contact_email ),
-		$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' ),
-		$gallery_html, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		$links_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	);
-}
+		return sprintf(
+			'<div class="theme-options-preview" style="margin:1em 0;padding:1em;border:1px solid #ccc;background:#f9f9f9;font-size:0.9em;">'
+			. '<strong>%s</strong>'
+			. '<dl style="margin:0.5em 0 0;display:grid;gap:0.25em;">'
+			. '<dt style="font-weight:600;">Site Title</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Site Description</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Contact Email</dt><dd>%s</dd>'
+			. '<dt style="font-weight:600;">Enable Feature</dt><dd>%s</dd>'
+			. '%s'
+			. '%s'
+			. '</dl></div>',
+			esc_html( $title ),
+			esc_html( $site_title ),
+			esc_html( $site_description ),
+			esc_html( $contact_email ),
+			$enable_feature ? esc_html__( 'Yes', 'bea-acf-options-for-polylang' ) : esc_html__( 'No', 'bea-acf-options-for-polylang' ),
+			$gallery_html, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			$links_html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		);
+	}
+endif;
 
 /**
  * Display option page values in the footer on the front (for testing).

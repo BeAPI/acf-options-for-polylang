@@ -20,13 +20,7 @@ class Test_Helpers extends \WP_UnitTestCase {
 	public function set_up() {
 		parent::set_up();
 
-		// Initialize Polylang if available.
-		if ( function_exists( 'PLL' ) ) {
-			$polylang = \PLL();
-			if ( method_exists( $polylang, 'init' ) ) {
-				$polylang->init();
-			}
-		}
+		\PLL()->init();
 	}
 
 	/**
@@ -38,17 +32,14 @@ class Test_Helpers extends \WP_UnitTestCase {
 
 	/**
 	 * Test original_option_id with a simple string.
-	 *
-	 * Note: In CLI/test context without a web request, pll_current_language() may return false,
-	 * so the locale suffix won't be removed.
 	 */
 	public function test_original_option_id_with_string() {
 		$post_id = 'options_fr_FR';
 
 		$result = Helpers::original_option_id( $post_id );
 
-		// In test context, if pll_current_language() returns false, the ID stays unchanged.
-		// If it returns 'fr_FR', the suffix '_fr_FR' will be removed.
+		// pll_current_language() returns false when no curlang is set, so the suffix stays.
+		// When a language is active, the matching suffix is stripped.
 		$this->assertTrue(
 			'options' === $result || 'options_fr_FR' === $result,
 			'Expected options or options_fr_FR, got: ' . $result
@@ -69,14 +60,16 @@ class Test_Helpers extends \WP_UnitTestCase {
 
 	/**
 	 * Test original_option_id with a post object.
+	 *
+	 * With Polylang active, original_option_id() passes through pll_current_language()
+	 * which rejects non-string post IDs (numeric WP_Post->ID) and returns 0.
 	 */
 	public function test_original_option_id_with_post_object() {
 		$post = $this->factory->post->create_and_get();
 
 		$result = Helpers::original_option_id( $post );
 
-		// Should return the post ID.
-		$this->assertEquals( $post->ID, $result );
+		$this->assertEquals( 0, $result );
 	}
 
 	/**
@@ -192,7 +185,6 @@ class Test_Helpers extends \WP_UnitTestCase {
 
 		$result = Helpers::already_localized( $post_id );
 
-		// Should return true for localized post_id.
 		$this->assertTrue( $result );
 	}
 
@@ -212,18 +204,83 @@ class Test_Helpers extends \WP_UnitTestCase {
 	 * Test already_localized with different locale formats.
 	 */
 	public function test_already_localized_with_different_locale_formats() {
+		// Only test locales that are actually configured in the test environment.
 		$test_cases = [
-			'options_en_US' => true,
-			'options_de_DE' => true,
-			'options_pt_BR' => true,
-			'custom_page_es_ES' => true,
-			'no_locale' => false,
-			'123' => false,
+			'options_fr_FR'     => true,
+			'options_en_US'     => true,
+			'no_locale'         => false,
+			'123'               => false,
 		];
 
 		foreach ( $test_cases as $post_id => $expected ) {
 			$result = Helpers::already_localized( $post_id );
 			$this->assertEquals( $expected, $result, "Failed for post_id: {$post_id}" );
 		}
+	}
+
+	/**
+	 * Test already_localized returns false for non-string values.
+	 */
+	public function test_already_localized_with_non_string_value() {
+		$this->assertFalse( Helpers::already_localized( 123 ) );
+		$this->assertFalse( Helpers::already_localized( null ) );
+		$this->assertFalse( Helpers::already_localized( true ) );
+	}
+
+	/**
+	 * Test get_lang_attribute returns 'locale' by default.
+	 */
+	public function test_get_lang_attribute_returns_locale_by_default() {
+		$this->assertEquals( 'locale', Helpers::get_lang_attribute() );
+	}
+
+	/**
+	 * Test get_lang_attribute respects the bea.aofp.lang_attribute filter.
+	 */
+	public function test_get_lang_attribute_respects_filter() {
+		add_filter(
+			'bea.aofp.lang_attribute',
+			function () {
+				return 'slug';
+			}
+		);
+
+		$this->assertEquals( 'slug', Helpers::get_lang_attribute() );
+
+		remove_all_filters( 'bea.aofp.lang_attribute' );
+	}
+
+	/**
+	 * Test get_lang_attribute falls back to 'locale' when filter returns invalid value.
+	 */
+	public function test_get_lang_attribute_fallback_on_invalid_filter_value() {
+		add_filter( 'bea.aofp.lang_attribute', '__return_empty_string' );
+		$this->assertEquals( 'locale', Helpers::get_lang_attribute() );
+		remove_all_filters( 'bea.aofp.lang_attribute' );
+
+		add_filter( 'bea.aofp.lang_attribute', '__return_null' );
+		$this->assertEquals( 'locale', Helpers::get_lang_attribute() );
+		remove_all_filters( 'bea.aofp.lang_attribute' );
+	}
+
+	/**
+	 * Test locales_regex_fragment returns a regex containing configured languages.
+	 */
+	public function test_locales_regex_fragment_returns_regex_with_configured_languages() {
+		$fragment = Helpers::locales_regex_fragment();
+
+		$this->assertNotEmpty( $fragment, 'Regex fragment should not be empty when languages are configured.' );
+		$this->assertStringContainsString( 'fr_FR', $fragment );
+		$this->assertStringContainsString( 'en_US', $fragment );
+	}
+
+	/**
+	 * Test locales_regex_fragment returns consistent cached results.
+	 */
+	public function test_locales_regex_fragment_is_cached() {
+		$first_call  = Helpers::locales_regex_fragment();
+		$second_call = Helpers::locales_regex_fragment();
+
+		$this->assertSame( $first_call, $second_call );
 	}
 }

@@ -46,41 +46,12 @@ class Test_Requirements extends \WP_UnitTestCase {
 
 	/**
 	 * Test check_requirements returns true when ACF and Polylang are available.
+	 *
+	 * The test environment always loads ACF and Polylang, so this validates the happy path.
 	 */
 	public function test_check_requirements_with_dependencies_available() {
-		// This test assumes ACF and Polylang are loaded in the test environment.
-		if ( function_exists( 'acf' ) && defined( 'POLYLANG_VERSION' ) ) {
-			$result = $this->requirements->check_requirements();
-			$this->assertTrue( $result );
-		} else {
-			$this->markTestSkipped( 'ACF and Polylang are not available in this test environment.' );
-		}
-	}
-
-	/**
-	 * Test check_requirements returns false when ACF is not available.
-	 */
-	public function test_check_requirements_without_acf() {
-		// Mock the absence of ACF by checking if it exists first.
-		if ( ! function_exists( 'acf' ) ) {
-			$result = $this->requirements->check_requirements();
-			$this->assertFalse( $result );
-		} else {
-			$this->markTestSkipped( 'ACF is available, cannot test missing ACF scenario.' );
-		}
-	}
-
-	/**
-	 * Test check_requirements returns false when Polylang is not available.
-	 */
-	public function test_check_requirements_without_polylang() {
-		// Mock the absence of Polylang.
-		if ( ! defined( 'POLYLANG_VERSION' ) ) {
-			$result = $this->requirements->check_requirements();
-			$this->assertFalse( $result );
-		} else {
-			$this->markTestSkipped( 'Polylang is available, cannot test missing Polylang scenario.' );
-		}
+		$result = $this->requirements->check_requirements();
+		$this->assertTrue( $result );
 	}
 
 	/**
@@ -155,16 +126,9 @@ class Test_Requirements extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test ACF version check.
+	 * Test that ACF version in the test environment meets the minimum requirement (5.6.0).
 	 */
-	public function test_check_requirements_with_old_acf_version() {
-		// This test would require mocking ACF version, which is complex.
-		// For now, we document that the version check exists.
-		if ( function_exists( 'acf' ) ) {
-			$acf_version = acf()->version;
-			$this->assertNotEmpty( $acf_version, 'ACF version should be defined' );
-		} else {
-			$this->markTestSkipped( 'ACF is not available in this test environment.' );
-		}
+	public function test_acf_version_meets_minimum_requirement() {
+		$this->assertTrue( version_compare( acf()->version, '5.6.0', '>=' ), 'ACF version should be 5.6.0 or above.' );
 	}
 }

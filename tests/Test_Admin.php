@@ -43,18 +43,8 @@ class Test_Admin extends \WP_UnitTestCase {
 			define( 'WP_ADMIN', true );
 		}
 
-		// Initialize Polylang and set current language.
-		if ( function_exists( 'PLL' ) ) {
-			$polylang = \PLL();
-			if ( method_exists( $polylang, 'init' ) ) {
-				$polylang->init();
-			}
-
-			// Force French as current language for tests.
-			if ( function_exists( 'pll_set_language' ) ) {
-				\pll_set_language( 'fr' );
-			}
-		}
+		\PLL()->init();
+		$this->set_polylang_language( 'fr' );
 
 		// Reset the singleton to ensure init() is called in test context.
 		Admin::destroy();
@@ -67,12 +57,30 @@ class Test_Admin extends \WP_UnitTestCase {
 	 * Tear down the test.
 	 */
 	public function tear_down() {
+		restore_previous_locale();
 		parent::tear_down();
 
 		// Reset screen and globals.
 		set_current_screen( 'front' );
 		unset( $_GET['page'] );
 		unset( $_SERVER['REQUEST_URI'] );
+	}
+
+	/**
+	 * Switch Polylang current language and WordPress locale for testing.
+	 *
+	 * @param string $slug Language slug (e.g. 'fr', 'en').
+	 */
+	private function set_polylang_language( string $slug ): void {
+		$languages = \PLL()->model->get_languages_list();
+		foreach ( $languages as $lang ) {
+			if ( $slug === $lang->slug ) {
+				\PLL()->curlang = $lang;
+				switch_to_locale( $lang->locale );
+				return;
+			}
+		}
+		$this->fail( "Polylang language '{$slug}' not found." );
 	}
 
 	/**
@@ -99,44 +107,58 @@ class Test_Admin extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test submitbox_before_major_actions output with current language.
+	 * Test submitbox_before_major_actions output with current language set.
 	 */
 	public function test_submitbox_before_major_actions_with_current_language() {
-		// In test context, pll_current_language() returns false,
-		// so we test the default "untranslated" message.
+		$this->set_polylang_language( 'fr' );
+
+		$page = [
+			'post_id'   => 'theme-general-settings',
+			'menu_slug' => 'theme-general-settings',
+		];
+
 		ob_start();
-		$this->admin->submitbox_before_major_actions();
+		$this->admin->submitbox_before_major_actions( $page );
 		$output = ob_get_clean();
 
-		// Check that output contains expected text for untranslated context.
 		$this->assertStringContainsString( 'misc-pub-section', $output );
-		$this->assertStringContainsString( 'Be careful', $output );
-		$this->assertStringContainsString( 'untranslated options', $output );
+		$this->assertStringContainsString( 'You are changing the options for language', $output );
 	}
 
 	/**
 	 * Test submitbox_before_major_actions output without current language.
 	 */
 	public function test_submitbox_before_major_actions_without_current_language() {
-		// This test would require mocking pll_current_language to return false.
-		// For simplicity, we test that the method produces output.
+		// Remove current language to trigger the "untranslated" message.
+		\PLL()->curlang = null;
+
+		$page = [
+			'post_id'   => 'theme-general-settings',
+			'menu_slug' => 'theme-general-settings',
+		];
+
 		ob_start();
-		$this->admin->submitbox_before_major_actions();
+		$this->admin->submitbox_before_major_actions( $page );
 		$output = ob_get_clean();
 
-		// Check that output contains the misc-pub-section class.
 		$this->assertStringContainsString( 'misc-pub-section', $output );
+		$this->assertStringContainsString( 'Be careful', $output );
+		$this->assertStringContainsString( 'untranslated options', $output );
 	}
 
 	/**
 	 * Test submitbox_before_major_actions output contains HTML tags.
 	 */
 	public function test_submitbox_before_major_actions_contains_html() {
+		$page = [
+			'post_id'   => 'theme-general-settings',
+			'menu_slug' => 'theme-general-settings',
+		];
+
 		ob_start();
-		$this->admin->submitbox_before_major_actions();
+		$this->admin->submitbox_before_major_actions( $page );
 		$output = ob_get_clean();
 
-		// Check that output contains opening and closing paragraph tags.
 		$this->assertStringContainsString( '<p class="misc-pub-section">', $output );
 		$this->assertStringContainsString( '</p>', $output );
 	}
@@ -148,5 +170,44 @@ class Test_Admin extends \WP_UnitTestCase {
 		$this->assertTrue(
 			is_callable( [ $this->admin, 'submitbox_before_major_actions' ] )
 		);
+	}
+
+	/**
+	 * Test submitbox_before_major_actions produces no output for invalid page data.
+	 */
+	public function test_submitbox_before_major_actions_with_invalid_page() {
+		$invalid_pages = [
+			null,
+			[],
+			[ 'menu_slug' => 'test' ],
+			[ 'post_id' => 123 ],
+		];
+
+		foreach ( $invalid_pages as $page ) {
+			ob_start();
+			$this->admin->submitbox_before_major_actions( $page );
+			$output = ob_get_clean();
+
+			$this->assertEmpty( $output, 'No output should be produced for invalid page data: ' . wp_json_encode( $page ) );
+		}
+	}
+
+	/**
+	 * Test submitbox_before_major_actions displays the language name when a language is active.
+	 */
+	public function test_submitbox_before_major_actions_with_active_language_name() {
+		$this->set_polylang_language( 'fr' );
+
+		$page = [
+			'post_id'   => 'theme-general-settings',
+			'menu_slug' => 'theme-general-settings',
+		];
+
+		ob_start();
+		$this->admin->submitbox_before_major_actions( $page );
+		$output = ob_get_clean();
+
+		$this->assertStringContainsString( 'Fran', $output, 'Output should contain the French language name.' );
+		$this->assertStringNotContainsString( 'untranslated', $output, 'Output should NOT contain the untranslated message.' );
 	}
 }

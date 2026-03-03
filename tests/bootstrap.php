@@ -5,6 +5,14 @@
  * @package BEA\ACF_Options_For_Polylang
  */
 
+// Force Polylang to select PLL_Admin as its context class so that init_context()
+// is called even when no languages exist in DB yet (the mu-plugin creates them at `init`).
+// Without this, PLL() / pll_current_language() / pll_languages_list() are never defined
+// because api.php is only loaded inside init_context().
+if ( ! defined( 'PLL_ADMIN' ) ) {
+	define( 'PLL_ADMIN', true );
+}
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {
