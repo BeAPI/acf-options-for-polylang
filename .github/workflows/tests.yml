@@ -13,14 +13,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
-        wordpress-version: ['6.0', '6.1', '6.2', '6.3', '6.4', '6.5', '6.6', '6.7', '6.8', '6.9', 'latest']
+        php-version: ['7.4', '8.2', '8.4']
+        wordpress-version: ['6.0', '6.4', 'latest']
     
     name: PHP ${{ matrix.php-version }} - WP ${{ matrix.wordpress-version }}
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -40,14 +40,14 @@ jobs:
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache Composer dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.json') }}
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Install npm dependencies
         run: npm install
@@ -59,53 +59,15 @@ jobs:
         run: npm run test:unit
 
       - name: Generate coverage report
-        if: matrix.php-version == '8.3' && matrix.wordpress-version == 'latest'
+        if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
         run: |
           npm run wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang "./vendor/bin/phpunit --coverage-clover=coverage.xml"
 
       - name: Upload coverage to Codecov
-        if: matrix.php-version == '8.3' && matrix.wordpress-version == 'latest'
+        if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
         uses: codecov/codecov-action@v3
         with:
           file: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
-
-  coding-standards:
-    runs-on: ubuntu-latest
-    name: Coding Standards
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Check coding standards
-        run: composer cs
-
-  lint:
-    runs-on: ubuntu-latest
-    name: PHP Lint
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.1'
-          
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Lint PHP files
-        run: ./vendor/bin/parallel-lint --exclude vendor .

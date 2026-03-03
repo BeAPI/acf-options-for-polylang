@@ -22,7 +22,7 @@ You need to have the following installed on your system:
 
 ## Test Coverage Summary
 
-The test suite includes **43 test methods** (up to 2 may be skipped when ACF or Polylang is missing) covering all main classes. Tests run in the context of the ACF options page `theme-general-settings` (http://localhost:8888/wp-admin/admin.php?page=theme-general-settings).
+The test suite includes **61 test methods** and **92 assertions** with **0 skips**, covering all main classes. Polylang is fully initialized during tests (via `PLL_ADMIN` constant in bootstrap) so all tests run with real Polylang API functions available. Tests run in the context of the ACF options page `theme-general-settings`.
 
 **Runtime language switch:** Two tests explicitly cover a change of language at runtime so that option values can differ per language (e.g. FR vs EN): `test_set_current_site_lang_changes_with_runtime_language_switch` and `test_set_options_id_lang_returns_different_id_per_runtime_language`.
 
@@ -30,46 +30,67 @@ The test suite includes **43 test methods** (up to 2 may be skipped when ACF or 
 
 | Class | Test method | What it tests | Non-regression verified |
 |-------|-------------|---------------|-------------------------|
-| **Admin** | `test_admin_instance_exists` | Admin singleton instantiation | Admin class is correctly bootstrapped and accessible. |
-| **Admin** | `test_filter_is_registered` | Hook `acf/options_page/submitbox_before_major_actions` | Submitbox notice is hooked and will display on ACF options pages. |
-| **Admin** | `test_submitbox_before_major_actions_with_current_language` | Output of submitbox with untranslated context | Warning "Be careful" and "untranslated options" are shown when no current language. |
-| **Admin** | `test_submitbox_before_major_actions_without_current_language` | Submitbox produces output | Submitbox always outputs HTML (no fatal/empty output). |
-| **Admin** | `test_submitbox_before_major_actions_contains_html` | HTML structure of submitbox | Valid `<p class="misc-pub-section">` markup for styling and a11y. |
-| **Admin** | `test_submitbox_before_major_actions_is_callable` | Callability of the callback | Method can be invoked by WordPress without error. |
-| **Helpers** | `test_original_option_id_with_string` | `original_option_id('options_fr_FR')` | Localized option ID is normalized to `options` or left as-is depending on Polylang context. |
-| **Helpers** | `test_original_option_id_converts_option_to_options` | `original_option_id('option')` | Legacy "option" slug is normalized to "options". |
-| **Helpers** | `test_original_option_id_with_post_object` | `original_option_id($post)` | Post objects are converted to post ID. |
-| **Helpers** | `test_original_option_id_with_user_object` | `original_option_id($user)` | User objects are converted to `user_{ID}`. |
-| **Helpers** | `test_original_option_id_with_term_object` | `original_option_id($term)` | Term objects are converted to `term_{term_id}`. |
-| **Helpers** | `test_is_option_page_with_options` | `is_option_page('options')` | Generic "options" is recognized as an option page. |
-| **Helpers** | `test_is_option_page_with_localized_options` | `is_option_page('options_fr_FR')` | Localized option IDs are recognized as option pages. |
-| **Helpers** | `test_is_option_page_with_regular_post_id` | `is_option_page($post_id)` with real post | Regular post IDs are not treated as option pages. |
-| **Helpers** | `test_is_option_page_with_excluded_post_id` | `is_option_page()` with filter `bea.aofp.excluded_post_ids` | Excluded post IDs are not treated as option pages; filter works. |
-| **Helpers** | `test_get_option_page_ids_returns_array` | `get_option_page_ids()` return type | ACF option page IDs are returned as an array (no fatal, correct API). |
-| **Helpers** | `test_already_localized_with_localized_post_id` | `already_localized('options_fr_FR')` | Locale suffix pattern (e.g. `fr_FR`) is detected. |
-| **Helpers** | `test_already_localized_with_non_localized_post_id` | `already_localized('options')` | Plain "options" is not considered localized. |
-| **Helpers** | `test_already_localized_with_different_locale_formats` | Various locale patterns (en_US, de_DE, pt_BR, etc.) | Regex for locale detection works for common formats; no false positives on IDs without locale. |
-| **Main** | `test_main_instance_exists` | Main singleton instantiation | Main class is correctly bootstrapped. |
-| **Main** | `test_filters_are_registered` | Hooks: `acf/validate_post_id`, `acf/settings/current_language`, `acf/load_value`, `acf/load_reference` | Core ACF integration filters are registered; options localization and default value/reference logic can run. |
-| **Main** | `test_set_current_site_lang` | `set_current_site_lang()` return type | Current language is returned as a string (Polylang integration). |
-| **Main** | `test_set_current_site_lang_changes_with_runtime_language_switch` | `set_current_site_lang()` after `pll_set_language('fr'/'en')` | Changing language at runtime returns the correct locale (fr_FR / en_US) so ACF can store/load different values per language. |
-| **Main** | `test_set_options_id_lang_returns_different_id_per_runtime_language` | `set_options_id_lang()` for custom option page when switching FR/EN | Same option page yields different storage keys (e.g. `theme-general-settings_fr_FR` vs `theme-general-settings_en_US`); guarantees values can differ between languages. |
-| **Main** | `test_set_current_site_lang_rest_api` | `set_current_site_lang()` in REST context | In REST API, WordPress locale is used instead of Polylang. |
-| **Main** | `test_get_default_reference_with_existing_reference` | `get_default_reference()` when reference already set | Existing reference is preserved (no overwrite). |
-| **Main** | `test_get_default_reference_with_localized_post_id` | `get_default_reference()` with localized option ID | Returns string or null; no fatal when no default exists. |
-| **Main** | `test_set_options_id_lang_with_non_option_page` | `set_options_id_lang()` with non-option post ID | Non-option IDs are left unchanged. |
-| **Main** | `test_set_options_id_lang_with_already_localized` | `set_options_id_lang()` with already localized ID | Already localized option IDs are not double-processed. |
-| **Main** | `test_get_default_value_in_admin` | `get_default_value()` in admin screen | In admin, value is not replaced by default (avoid overwriting user input). |
-| **Main** | `test_get_default_value_with_non_empty_value` | `get_default_value()` with non-empty value | Non-empty value is preserved. |
-| **Main** | `test_get_default_value_with_filter_disabled` | `get_default_value()` with filter `bea.aofp.get_default` false | Filter allows disabling default value fallback; empty value stays empty. |
-| **Requirements** | `test_requirements_instance_exists` | Requirements singleton instantiation | Requirements class is bootstrapped. |
-| **Requirements** | `test_check_requirements_with_dependencies_available` | `check_requirements()` when ACF + Polylang present | Plugin loads when dependencies are met. *(Skipped if deps missing.)* |
-| **Requirements** | `test_check_requirements_without_acf` | `check_requirements()` when ACF missing | Plugin does not load without ACF. *(Skipped if ACF present.)* |
-| **Requirements** | `test_check_requirements_without_polylang` | `check_requirements()` when Polylang missing | Plugin does not load without Polylang. *(Skipped if Polylang present.)* |
-| **Requirements** | `test_display_error_triggers_error` | `display_error()` behavior | `trigger_error()` is called and `admin_notices` is hooked; missing deps show notice. |
-| **Requirements** | `test_display_error_adds_admin_notice_action` | `display_error()` hooks | `admin_notices` action is registered. |
-| **Requirements** | `test_display_error_adds_admin_init_action` | `display_error()` hooks | `admin_init` action is registered (for deactivation flow). |
-| **Requirements** | `test_check_requirements_with_old_acf_version` | ACF version presence | ACF version is defined when ACF is available. *(Skipped if ACF missing.)* |
+| **Admin** (8) | `test_admin_instance_exists` | Admin singleton instantiation | Admin class is correctly bootstrapped and accessible. |
+| | `test_filter_is_registered` | Hook `acf/options_page/submitbox_before_major_actions` | Submitbox notice is hooked and will display on ACF options pages. |
+| | `test_submitbox_before_major_actions_with_current_language` | Output of submitbox with untranslated context | Warning "Be careful" and "untranslated options" are shown when no current language. |
+| | `test_submitbox_before_major_actions_without_current_language` | Submitbox produces output | Submitbox always outputs HTML (no fatal/empty output). |
+| | `test_submitbox_before_major_actions_contains_html` | HTML structure of submitbox | Valid `<p class="misc-pub-section">` markup for styling and a11y. |
+| | `test_submitbox_before_major_actions_is_callable` | Callability of the callback | Method can be invoked by WordPress without error. |
+| | `test_submitbox_before_major_actions_with_invalid_page` | Submitbox with non-option page context | No output is produced when the page is not an ACF options page. |
+| | `test_submitbox_before_major_actions_with_active_language_name` | Submitbox with active Polylang language | Output includes current language name from Polylang. |
+| **Functions** (3) | `test_bea_aofp_switch_to_untranslated_function_exists` | `bea_aofp_switch_to_untranslated()` existence | Public API function is defined and callable. |
+| | `test_bea_aofp_restore_current_lang_function_exists` | `bea_aofp_restore_current_lang()` existence | Public API function is defined and callable. |
+| | `test_switch_and_restore_via_public_api` | Full switch/restore cycle via public API | Public API correctly delegates to Main class; `set_options_id_lang` appends then removes locale suffix. |
+| **Helpers** (19) | `test_original_option_id_with_string` | `original_option_id('options_fr_FR')` | Localized option ID is normalized to `options`. |
+| | `test_original_option_id_converts_option_to_options` | `original_option_id('option')` | Legacy "option" slug is normalized to "options". |
+| | `test_original_option_id_with_post_object` | `original_option_id($post)` | Post objects return `0` (numeric IDs are not valid localized option identifiers). |
+| | `test_original_option_id_with_user_object` | `original_option_id($user)` | User objects are converted to `user_{ID}`. |
+| | `test_original_option_id_with_term_object` | `original_option_id($term)` | Term objects are converted to `term_{term_id}`. |
+| | `test_is_option_page_with_options` | `is_option_page('options')` | Generic "options" is recognized as an option page. |
+| | `test_is_option_page_with_localized_options` | `is_option_page('options_fr_FR')` | Localized option IDs are recognized as option pages. |
+| | `test_is_option_page_with_regular_post_id` | `is_option_page($post_id)` with real post | Regular post IDs are not treated as option pages. |
+| | `test_is_option_page_with_excluded_post_id` | `is_option_page()` with filter `bea.aofp.excluded_post_ids` | Excluded post IDs are not treated as option pages; filter works. |
+| | `test_get_option_page_ids_returns_array` | `get_option_page_ids()` return type | ACF option page IDs are returned as an array (no fatal, correct API). |
+| | `test_already_localized_with_localized_post_id` | `already_localized('options_fr_FR')` | Locale suffix pattern (e.g. `fr_FR`) is detected. |
+| | `test_already_localized_with_non_localized_post_id` | `already_localized('options')` | Plain "options" is not considered localized. |
+| | `test_already_localized_with_different_locale_formats` | Various locale patterns (en_US, de_DE, pt_BR, etc.) | Regex for locale detection works for common formats; no false positives on IDs without locale. |
+| | `test_already_localized_with_non_string_value` | `already_localized()` with integer/non-string input | Non-string values return false without errors. |
+| | `test_get_lang_attribute_returns_locale_by_default` | `get_lang_attribute()` default return | Returns `'locale'` when no constant or filter overrides. |
+| | `test_get_lang_attribute_respects_filter` | `get_lang_attribute()` with `bea.aofp.lang_attribute` filter | Filter can change the attribute to `'slug'` or other values. |
+| | `test_get_lang_attribute_fallback_on_invalid_filter_value` | `get_lang_attribute()` with invalid filter return | Falls back to `'locale'` when filter returns a non-string value. |
+| | `test_locales_regex_fragment_returns_regex_with_configured_languages` | `locales_regex_fragment()` content | Returns a regex fragment containing configured Polylang language locales. |
+| | `test_locales_regex_fragment_is_cached` | `locales_regex_fragment()` caching | Second call returns the same cached value. |
+| **Main** (25) | `test_main_instance_exists` | Main singleton instantiation | Main class is correctly bootstrapped. |
+| | `test_filters_are_registered` | Hooks: `acf/validate_post_id`, `acf/settings/current_language`, `acf/load_value`, `acf/load_reference` | Core ACF integration filters are registered. |
+| | `test_set_current_site_lang` | `set_current_site_lang()` return type | Current language is returned as a string (Polylang integration). |
+| | `test_set_current_site_lang_changes_with_runtime_language_switch` | `set_current_site_lang()` after language switch | Changing language at runtime returns the correct locale (fr_FR / en_US). |
+| | `test_set_options_id_lang_returns_different_id_per_runtime_language` | `set_options_id_lang()` for custom option page when switching FR/EN | Same option page yields different storage keys per language. |
+| | `test_set_current_site_lang_rest_api` | `set_current_site_lang()` in REST context | In REST API, WordPress locale is used instead of Polylang. |
+| | `test_get_default_reference_with_existing_reference` | `get_default_reference()` when reference already set | Existing reference is preserved (no overwrite). |
+| | `test_get_default_reference_with_localized_post_id` | `get_default_reference()` with localized option ID | Returns string or null; no fatal when no default exists. |
+| | `test_set_options_id_lang_with_non_option_page` | `set_options_id_lang()` with non-option post ID | Non-option IDs are left unchanged. |
+| | `test_set_options_id_lang_with_already_localized` | `set_options_id_lang()` with already localized ID | Already localized option IDs are not double-processed. |
+| | `test_get_default_value_in_admin` | `get_default_value()` in admin screen | In admin, value is not replaced by default (avoid overwriting user input). |
+| | `test_get_default_value_with_non_empty_value` | `get_default_value()` with non-empty value | Non-empty value is preserved. |
+| | `test_get_default_value_with_filter_disabled` | `get_default_value()` with filter `bea.aofp.get_default` false | Filter allows disabling default value fallback; empty value stays empty. |
+| | `test_maybe_load_untranslated_value_returns_value_when_not_in_untranslated_context` | `maybe_load_untranslated_value()` outside untranslated context | Value is returned as-is when not in untranslated context. |
+| | `test_maybe_load_untranslated_value_returns_value_when_post_id_not_localized` | `maybe_load_untranslated_value()` with non-localized post ID | Value is returned as-is for non-localized post IDs. |
+| | `test_maybe_load_untranslated_value_returns_value_when_not_option_key` | `maybe_load_untranslated_value()` with non-option key | Value is returned as-is when post_id is not an option page. |
+| | `test_maybe_load_untranslated_value_loads_unsuffixed_value_in_untranslated_context` | `maybe_load_untranslated_value()` in untranslated context | Loads the unsuffixed (default) option value when in untranslated context. |
+| | `test_switch_to_untranslated_and_restore` | `switch_to_untranslated()` + `restore_current_lang()` cycle | Language suffix is removed then restored correctly. |
+| | `test_switch_to_untranslated_nesting` | Nested `switch_to_untranslated()` calls | Nested switches work correctly; each restore pops one level. |
+| | `test_restore_current_lang_without_switch_is_noop` | `restore_current_lang()` without prior switch | No-op when called without a preceding switch; no errors. |
+| | `test_get_default_value_falls_back_to_default_when_empty` | `get_default_value()` with empty value on front-end | Falls back to default (unsuffixed) value when current language value is empty. |
+| | `test_get_default_value_with_empty_array` | `get_default_value()` with empty array value | Empty arrays are treated as empty and trigger default fallback. |
+| | `test_get_default_value_with_null_value` | `get_default_value()` with null value | Null values trigger default fallback. |
+| | `test_get_default_value_with_repeater_type` | `get_default_value()` with repeater field type | Repeater fields are excluded from default value fallback. |
+| | `test_get_default_value_with_bea_aofp_get_default_enable_filter` | `get_default_value()` with `bea.aofp.get_default` true + stored default | When filter is enabled and a default value exists in DB, it is returned. |
+| **Requirements** (6) | `test_requirements_instance_exists` | Requirements singleton instantiation | Requirements class is bootstrapped. |
+| | `test_check_requirements_with_dependencies_available` | `check_requirements()` when ACF + Polylang present | Plugin loads when dependencies are met. |
+| | `test_display_error_triggers_error` | `display_error()` behavior | `trigger_error()` is called and `admin_notices` is hooked; missing deps show notice. |
+| | `test_display_error_adds_admin_notice_action` | `display_error()` hooks | `admin_notices` action is registered. |
+| | `test_display_error_adds_admin_init_action` | `display_error()` hooks | `admin_init` action is registered (for deactivation flow). |
+| | `test_acf_version_meets_minimum_requirement` | ACF version check | ACF version constant is defined and meets minimum requirement. |
 
 ## Setup and Running Tests
 
@@ -215,11 +236,14 @@ Tests are located in the `tests/` directory:
 
 ```
 tests/
-├── bootstrap.php           # PHPUnit bootstrap
-├── test-main.php          # Tests for Main class
-├── test-helpers.php       # Tests for Helpers class
-├── test-requirements.php  # Tests for Requirements class
-└── test-admin.php         # Tests for Admin class
+├── bootstrap.php              # PHPUnit bootstrap (defines PLL_ADMIN for Polylang init)
+├── mu-plugins/
+│   └── setup-polylang.php     # Creates FR/EN languages, registers ACF options page & fields
+├── Test_Admin.php             # Tests for Admin class (8 tests)
+├── Test_Functions.php         # Tests for public API functions (3 tests)
+├── Test_Helpers.php           # Tests for Helpers class (19 tests)
+├── Test_Main.php              # Tests for Main class (25 tests)
+└── Test_Requirements.php      # Tests for Requirements class (6 tests)
 ```
 
 ### Basic Test Template
@@ -431,14 +455,36 @@ public function test_admin_functionality() {
 }
 ```
 
+### Test Environment Bootstrap
+
+The test bootstrap (`tests/bootstrap.php`) defines `PLL_ADMIN = true` before WordPress loads. This forces Polylang to fully initialize, making `PLL()`, `pll_current_language()`, and all Polylang API functions available during tests. ACF and Polylang are always present in the wp-env test environment.
+
+### Switching Polylang Language in Tests
+
+Use the `set_polylang_language()` helper to switch languages at runtime:
+
+```php
+private function set_polylang_language( string $slug ): void {
+	$languages = \PLL()->model->get_languages_list();
+	foreach ( $languages as $lang ) {
+		if ( $slug === $lang->slug ) {
+			\PLL()->curlang = $lang;
+			switch_to_locale( $lang->locale );
+			return;
+		}
+	}
+	$this->fail( "Polylang language '{$slug}' not found." );
+}
+```
+
 ### Skipping Tests
 
 If a test requires conditions not available:
 
 ```php
-public function test_requires_acf() {
-	if ( ! function_exists( 'acf' ) ) {
-		$this->markTestSkipped( 'ACF is required for this test.' );
+public function test_requires_specific_condition() {
+	if ( ! some_condition() ) {
+		$this->markTestSkipped( 'Specific condition is required for this test.' );
 	}
 	
 	// Test code
@@ -545,9 +591,6 @@ Increase Docker memory allocation in Docker Desktop preferences.
 **Slow test execution:**
 - Run specific tests: `./vendor/bin/phpunit tests/Test_Main.php`
 - Reduce the number of tests running in parallel
-
-**Out of memory errors:**
-Increase Docker memory allocation in Docker Desktop preferences.
 
 ## Additional Resources
 

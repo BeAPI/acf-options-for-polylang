@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0 - 16 February 2025
+## 2.0.0 - Unreleased
 
 ### 🚨 Breaking Changes
 * **BREAKING**: Minimum PHP version raised from 5.6 to 7.4
@@ -14,11 +14,6 @@
 * Added GitHub Actions workflow for automated testing (66 PHP/WP combinations)
 * Added GitHub Actions workflow for code quality checks across all PHP versions
 * Added TESTING.md documentation for running and writing tests
-* Added 41 unit test methods covering all main classes:
-  - 15 tests for Main class
-  - 13 tests for Helpers class
-  - 7 tests for Requirements class
-  - 6 tests for Admin class
 
 ### 🔧 Improvements
 * Updated all require-dev dependencies to latest versions:
@@ -40,6 +35,14 @@
 * Removed custom PHP version check and compat.php; PHP requirement is now enforced by WordPress Requires PHP header (WP 5.2+)
 
 ### 📊 Testing & Quality
+* 61 unit tests, 92 assertions, 0 skips covering all main classes:
+  - 25 tests for Main class (filters, language switching, default values, untranslated context, switch/restore)
+  - 19 tests for Helpers class (option IDs, localization detection, lang attribute, regex fragment)
+  - 8 tests for Admin class (submitbox output, hooks, language display)
+  - 6 tests for Requirements class (dependency checks, error display)
+  - 3 tests for public API functions (switch/restore integration)
+* Fixed Polylang initialization in test environment by defining `PLL_ADMIN` in bootstrap, ensuring all Polylang API functions are available
+* Added `set_polylang_language()` test helper for proper runtime language switching via `PLL()->curlang` and `switch_to_locale()`
 * Test coverage across PHP 7.4, 8.0, 8.1, 8.2, 8.3, 8.4
 * Test coverage across WordPress 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, latest
 * Automated code quality checks on all PHP versions

@@ -48,7 +48,7 @@ Please refer to the [contributing guidelines](.github/CONTRIBUTING.md) to increa
 
 ### Testing
 
-This plugin includes comprehensive unit tests. See [TESTING.md](TESTING.md) for detailed instructions on running tests.
+This plugin includes a comprehensive unit test suite: **61 tests**, **92 assertions**, **0 skips**. Tests run with Polylang fully initialized via wp-env.
 
 Quick start:
 ```bash
@@ -57,7 +57,7 @@ npm run wp-env:start
 npm run test:unit
 ```
 
-See [TESTING.md](TESTING.md) for detailed testing documentation.
+See [TESTING.md](TESTING.md) for detailed testing documentation, test matrix, and writing guidelines.
 
 ### Issues & features request / proposal
 
