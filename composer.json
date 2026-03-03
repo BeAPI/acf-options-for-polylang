@@ -1,48 +1,48 @@
 {
-	"name":"bea/acf-options-for-polylang",
-	"description":"Improves Polylang by adding per-language support for ACF options pages—each language can have its own option values.",
-	"keywords":[
+	"name": "bea/acf-options-for-polylang",
+	"description": "Improves Polylang by adding per-language support for ACF options pages—each language can have its own option values.",
+	"license": "GPL-3.0-or-later",
+	"type": "wordpress-plugin",
+	"keywords": [
 		"acf-options",
 		"polylang",
 		"acf",
 		"options"
 	],
-	"homepage":"https://github.com/BeAPI/acf-options-for-polylang",
-	"authors":[
+	"authors": [
 		{
-			"name":"Be API",
-			"email":"technique@beapi.fr",
-			"homepage":"https://beapi.fr"
+			"name": "Be API",
+			"email": "technique@beapi.fr",
+			"homepage": "https://beapi.fr"
 		}
 	],
-	"type":"wordpress-plugin",
-	"minimum-stability":"stable",
-	"license":"GPL-3.0+",
+	"homepage": "https://github.com/BeAPI/acf-options-for-polylang",
 	"require": {
 		"php": ">=7.4.0",
-		"composer/installers": "^1.0|^2.0"
+		"composer/installers": "^1.0 || ^2.0"
 	},
 	"require-dev": {
 		"dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-		"phpcompatibility/php-compatibility": "^9.3",
-		"squizlabs/php_codesniffer": "^3.10",
-		"wp-coding-standards/wpcs": "^3.1",
-		"overtrue/phplint": "^9.0",
+		"mockery/mockery": "^1.6",
+		"overtrue/phplint": "^3.0 || ^9.0",
 		"php-parallel-lint/php-parallel-lint": "^1.4",
+		"phpcompatibility/php-compatibility": "^9.3",
 		"phpro/grumphp-shim": "^2.7",
 		"phpunit/phpunit": "^9.6",
-		"yoast/phpunit-polyfills": "^2.0",
-		"mockery/mockery": "^1.6"
+		"squizlabs/php_codesniffer": "^3.10",
+		"wp-coding-standards/wpcs": "^3.1",
+		"yoast/phpunit-polyfills": "^2.0"
 	},
-	"scripts": {
-		"cs": "./vendor/bin/phpcs",
-		"cbf": "./vendor/bin/phpcbf"
-	},
+	"minimum-stability": "stable",
 	"config": {
 		"allow-plugins": {
 			"composer/installers": true,
 			"dealerdirect/phpcodesniffer-composer-installer": true,
 			"phpro/grumphp-shim": true
 		}
+	},
+	"scripts": {
+		"cbf": "./vendor/bin/phpcbf",
+		"cs": "./vendor/bin/phpcs"
 	}
 }

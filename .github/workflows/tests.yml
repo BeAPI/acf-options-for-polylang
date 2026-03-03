@@ -60,7 +60,7 @@ jobs:
       - name: Generate coverage report
         if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
         run: |
-          npm run wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang "./vendor/bin/phpunit --coverage-clover=coverage.xml"
+          npm run wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang bash -c "./vendor/bin/phpunit --coverage-clover=coverage.xml"
 
       - name: Upload coverage to Codecov
         if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
