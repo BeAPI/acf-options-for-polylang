@@ -10,6 +10,7 @@
 		"tests": {
 			"phpVersion": "8.3",
 			"mappings": {
+				"wp-content/plugins/acf-options-for-polylang": ".",
 				"wp-content/mu-plugins/setup-polylang.php": "./tests/mu-plugins/setup-polylang.php"
 			}
 		}
