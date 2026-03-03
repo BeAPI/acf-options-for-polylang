@@ -59,3 +59,37 @@ fabric.properties
 # Project
 vendor
 composer.lock
+
+# Node modules and npm
+node_modules
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# WordPress test environment
+.wp-env.home.json
+.wp-env.override.json
+
+# PHPUnit
+phpunit.xml
+.phpunit.result.cache
+tests/_output/
+tests/_support/_generated/
+coverage/
+coverage.xml
+clover.xml
+
+# Test files and directories
+.phpunit.cache
+
+# Build and temporary files
+*.log
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.sass-cache/
+.vscode/
+.phpcs.xml.dist

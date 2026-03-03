@@ -12,7 +12,7 @@ grumphp:
       no_check_publish: true
       no_local_repository: true
     phplint:
-      exclude: ['vendor']
+      exclude: ['vendor', 'autoload.php']
       jobs: ~
       triggered_by: ['php']
     phpcs:

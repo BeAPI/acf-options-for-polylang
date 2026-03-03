@@ -1,5 +1,65 @@
 # Changelog
 
+## 2.0.0 - Unreleased
+
+### 🚨 Breaking Changes
+* **BREAKING**: Minimum PHP version raised from 5.6 to 7.4
+* **BREAKING**: Minimum WordPress version raised from 4.7 to 6.0
+* **BREAKING**: Updated plugin header with modern WordPress standards
+
+### ✨ New Features
+* Added configurable Polylang language attribute for option key suffix: constant `BEA_ACF_OPTIONS_FOR_POLYLANG_LANG_ATTRIBUTE`, helper `Helpers::get_lang_attribute()`, and filter `bea.aofp.lang_attribute` allow using `slug` (or other Polylang fields) instead of default `locale`
+* Added comprehensive unit testing suite with PHPUnit
+* Added wp-env configuration for Docker-based testing environment
+* Added GitHub Actions workflow for automated testing (66 PHP/WP combinations)
+* Added GitHub Actions workflow for code quality checks across all PHP versions
+* Added TESTING.md documentation for running and writing tests
+
+### 🔧 Improvements
+* Updated all require-dev dependencies to latest versions:
+  - PHPUnit: ^9.6 || ^10.0 || ^11.0 (multi-version support)
+  - WordPress Coding Standards: ^3.1 (with WP 6.0+ support)
+  - PHP_CodeSniffer: ^3.10
+  - PHPUnit Polyfills: ^2.0 || ^3.0
+  - GrumPHP: ^2.7
+  - PHPLint: ^9.0
+  - Mockery: ^1.6
+* Enforced short array syntax [] in phpcs.xml configuration
+* Fixed phpcs.xml text_domain property deprecation warning
+* Updated .gitignore with all test-related files and artifacts
+* Updated .distignore to exclude all development files from production zip
+* Updated plugin header with all standard WordPress fields:
+  - Requires at least, Requires PHP, Tested up to
+  - License, License URI, Text Domain, Domain Path, Network
+* Updated copyright year to 2025
+* Removed custom PHP version check and compat.php; PHP requirement is now enforced by WordPress Requires PHP header (WP 5.2+)
+
+### 📊 Testing & Quality
+* 61 unit tests, 92 assertions, 0 skips covering all main classes:
+  - 25 tests for Main class (filters, language switching, default values, untranslated context, switch/restore)
+  - 19 tests for Helpers class (option IDs, localization detection, lang attribute, regex fragment)
+  - 8 tests for Admin class (submitbox output, hooks, language display)
+  - 6 tests for Requirements class (dependency checks, error display)
+  - 3 tests for public API functions (switch/restore integration)
+* Fixed Polylang initialization in test environment by defining `PLL_ADMIN` in bootstrap, ensuring all Polylang API functions are available
+* Added `set_polylang_language()` test helper for proper runtime language switching via `PLL()->curlang` and `switch_to_locale()`
+* Test coverage across PHP 7.4, 8.0, 8.1, 8.2, 8.3, 8.4
+* Test coverage across WordPress 6.0, 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8, 6.9, latest
+* Automated code quality checks on all PHP versions
+* Code coverage reporting with Codecov integration
+* All code complies with WordPress Coding Standards
+
+### 🐛 Bug Fixes
+* Fixed coding standards violations (use __DIR__ instead of dirname(__FILE__))
+* Converted array() syntax to short [] syntax throughout codebase
+
+### 📚 Documentation
+* Documented language attribute override (constant and filter) in README.md
+* Added comprehensive TESTING.md with setup and usage instructions
+* Added test coverage documentation
+* Added contribution guidelines for tests
+* Updated README.md with testing quick start section
+
 ## 1.1.12 - 26 March 2025
 * FIX: Resolved an issue where the plugin would sometimes deactivate randomly on multisite installations when visiting a site.
 

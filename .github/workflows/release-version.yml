@@ -1,4 +1,4 @@
-name: Upload Release Asset
+name: Deploy to WordPress.org
 
 on:
   push:
@@ -7,12 +7,12 @@ on:
       - '*' # Push events to matching *
 
 jobs:
-  build:
-    name: Upload Release Asset
+  deploy:
+    name: Deploy to WordPress.org
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Publish to WP.org
         uses: 10up/action-wordpress-plugin-deploy@stable

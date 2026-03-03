@@ -1,0 +1,72 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: ['7.4', '8.2', '8.4']
+        wordpress-version: ['6.0', '6.4', 'latest']
+    
+    name: PHP ${{ matrix.php-version }} - WP ${{ matrix.wordpress-version }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, mysql, mysqli, pdo_mysql
+          coverage: xdebug
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Install npm dependencies
+        run: npm install
+
+      - name: Start WordPress environment
+        run: npm run wp-env:start
+
+      - name: Run tests
+        run: npm run test:unit
+
+      - name: Generate coverage report
+        if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
+        run: |
+          npm run wp-env run tests-cli --env-cwd=wp-content/plugins/acf-options-for-polylang bash -c "./vendor/bin/phpunit --coverage-clover=coverage.xml"
+
+      - name: Upload coverage to Codecov
+        if: matrix.php-version == '8.4' && matrix.wordpress-version == 'latest'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	bootstrap="tests/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.6/phpunit.xsd">
+	<coverage processUncoveredFiles="true">
+		<include>
+			<directory suffix=".php">./classes</directory>
+		</include>
+		<exclude>
+			<directory>./vendor</directory>
+			<directory>./tests</directory>
+		</exclude>
+	</coverage>
+	<testsuites>
+		<testsuite name="ACF Options for Polylang Test Suite">
+			<directory suffix=".php">tests/</directory>
+			<exclude>tests/bootstrap.php</exclude>
+		</testsuite>
+	</testsuites>
+	<php>
+		<env name="WORDPRESS_TABLE_PREFIX" value="wp_"/>
+	</php>
+</phpunit>

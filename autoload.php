@@ -1,4 +1,10 @@
-<?php namespace BEA\ACF_Options_For_Polylang;
+<?php
+namespace BEA\ACF_Options_For_Polylang;
+
+// Exit if accessed directly or if required constants are not defined.
+if ( ! defined( 'ABSPATH' ) || ! defined( 'BEA_ACF_OPTIONS_FOR_POLYLANG_DIR' ) ) {
+	return;
+}
 
 /**
  * An example of a general-purpose implementation that includes the optional
