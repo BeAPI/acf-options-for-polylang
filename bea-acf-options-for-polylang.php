@@ -15,6 +15,7 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 Text Domain: bea-acf-options-for-polylang
 Domain Path: /languages
 Network: false
+Requires Plugins: polylang
 ----
 
 Copyright 2018-2025 Be API Technical team (human@beapi.fr)
