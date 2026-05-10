@@ -83,4 +83,8 @@ function bea_acf_options_for_polylang_load() {
 	if ( is_admin() ) {
 		\BEA\ACF_Options_For_Polylang\Admin::get_instance();
 	}
+
+	if ( class_exists( 'WPGraphQL' ) ) {
+		\BEA\ACF_Options_For_Polylang\Graphql::get_instance();
+	}
 }
