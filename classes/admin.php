@@ -12,7 +12,7 @@ class Admin {
 	 * Register hooks
 	 */
 	protected function init() {
-		add_filter(
+		add_action(
 			'acf/options_page/submitbox_before_major_actions',
 			[
 				$this,
