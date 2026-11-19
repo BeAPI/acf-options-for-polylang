@@ -449,6 +449,60 @@ class Test_Main extends \WP_UnitTestCase {
 	}
 
 	/**
+	 * Test get_default_value falls back when ACF already replaced a missing localized value by the field default_value.
+	 *
+	 * ACF applies `default_value` before `acf/load_value`: a true_false field with default 0 reaches the filter as 0.
+	 */
+	public function test_get_default_value_falls_back_when_localized_value_is_field_default() {
+		$this->set_polylang_language( 'fr' );
+		set_current_screen( 'front' );
+
+		update_option( 'options_display_overline', '1' );
+		update_option( '_options_display_overline', 'field_display_overline' );
+		acf_get_store( 'values' )->reset();
+
+		$field = [
+			'type'          => 'true_false',
+			'name'          => 'display_overline',
+			'key'           => 'field_display_overline',
+			'default_value' => 0,
+		];
+
+		$localized_post_id = 'options_' . pll_current_language( Helpers::get_lang_attribute() );
+
+		$result = $this->main->get_default_value( 0, $localized_post_id, $field );
+
+		$this->assertSame( '1', $result );
+	}
+
+	/**
+	 * Test get_default_value keeps a value explicitly stored for the current language, even 0.
+	 */
+	public function test_get_default_value_keeps_stored_localized_falsy_value() {
+		$this->set_polylang_language( 'fr' );
+		set_current_screen( 'front' );
+
+		$localized_post_id = 'options_' . pll_current_language( Helpers::get_lang_attribute() );
+
+		update_option( 'options_display_overline', '1' );
+		update_option( '_options_display_overline', 'field_display_overline' );
+		update_option( $localized_post_id . '_display_overline', '0' );
+		update_option( '_' . $localized_post_id . '_display_overline', 'field_display_overline' );
+		acf_get_store( 'values' )->reset();
+
+		$field = [
+			'type'          => 'true_false',
+			'name'          => 'display_overline',
+			'key'           => 'field_display_overline',
+			'default_value' => 0,
+		];
+
+		$result = $this->main->get_default_value( '0', $localized_post_id, $field );
+
+		$this->assertSame( '0', $result );
+	}
+
+	/**
 	 * Test get_default_value with an array of empty strings triggers fallback.
 	 */
 	public function test_get_default_value_with_empty_array() {
