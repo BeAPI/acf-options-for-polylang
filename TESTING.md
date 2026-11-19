@@ -22,7 +22,7 @@ You need to have the following installed on your system:
 
 ## Test Coverage Summary
 
-The test suite includes **61 test methods** and **92 assertions** with **0 skips**, covering all main classes. Polylang is fully initialized during tests (via `PLL_ADMIN` constant in bootstrap) so all tests run with real Polylang API functions available. Tests run in the context of the ACF options page `theme-general-settings`.
+The test suite includes **63 test methods** and **94 assertions** with **0 skips**, covering all main classes. Polylang is fully initialized during tests (via `PLL_ADMIN` constant in bootstrap) so all tests run with real Polylang API functions available. Tests run in the context of the ACF options page `theme-general-settings`.
 
 **Runtime language switch:** Two tests explicitly cover a change of language at runtime so that option values can differ per language (e.g. FR vs EN): `test_set_current_site_lang_changes_with_runtime_language_switch` and `test_set_options_id_lang_returns_different_id_per_runtime_language`.
 
@@ -60,7 +60,7 @@ The test suite includes **61 test methods** and **92 assertions** with **0 skips
 | | `test_get_lang_attribute_fallback_on_invalid_filter_value` | `get_lang_attribute()` with invalid filter return | Falls back to `'locale'` when filter returns a non-string value. |
 | | `test_locales_regex_fragment_returns_regex_with_configured_languages` | `locales_regex_fragment()` content | Returns a regex fragment containing configured Polylang language locales. |
 | | `test_locales_regex_fragment_is_cached` | `locales_regex_fragment()` caching | Second call returns the same cached value. |
-| **Main** (25) | `test_main_instance_exists` | Main singleton instantiation | Main class is correctly bootstrapped. |
+| **Main** (27) | `test_main_instance_exists` | Main singleton instantiation | Main class is correctly bootstrapped. |
 | | `test_filters_are_registered` | Hooks: `acf/validate_post_id`, `acf/settings/current_language`, `acf/load_value`, `acf/load_reference` | Core ACF integration filters are registered. |
 | | `test_set_current_site_lang` | `set_current_site_lang()` return type | Current language is returned as a string (Polylang integration). |
 | | `test_set_current_site_lang_changes_with_runtime_language_switch` | `set_current_site_lang()` after language switch | Changing language at runtime returns the correct locale (fr_FR / en_US). |
@@ -81,6 +81,8 @@ The test suite includes **61 test methods** and **92 assertions** with **0 skips
 | | `test_switch_to_untranslated_nesting` | Nested `switch_to_untranslated()` calls | Nested switches work correctly; each restore pops one level. |
 | | `test_restore_current_lang_without_switch_is_noop` | `restore_current_lang()` without prior switch | No-op when called without a preceding switch; no errors. |
 | | `test_get_default_value_falls_back_to_default_when_empty` | `get_default_value()` with empty value on front-end | Falls back to default (unsuffixed) value when current language value is empty. |
+| | `test_get_default_value_falls_back_when_localized_value_is_field_default` | `get_default_value()` with a true_false default 0 and nothing stored for the language | Falls back to the default (unsuffixed) value even when ACF already applied the field `default_value`. |
+| | `test_get_default_value_keeps_stored_localized_falsy_value` | `get_default_value()` with `0` stored for the language | A value explicitly saved for the language, even falsy, is kept. |
 | | `test_get_default_value_with_empty_array` | `get_default_value()` with empty array value | Empty arrays are treated as empty and trigger default fallback. |
 | | `test_get_default_value_with_null_value` | `get_default_value()` with null value | Null values trigger default fallback. |
 | | `test_get_default_value_with_repeater_type` | `get_default_value()` with repeater field type | Repeater fields are excluded from default value fallback. |
@@ -242,7 +244,7 @@ tests/
 ├── Test_Admin.php             # Tests for Admin class (8 tests)
 ├── Test_Functions.php         # Tests for public API functions (3 tests)
 ├── Test_Helpers.php           # Tests for Helpers class (19 tests)
-├── Test_Main.php              # Tests for Main class (25 tests)
+├── Test_Main.php              # Tests for Main class (27 tests)
 └── Test_Requirements.php      # Tests for Requirements class (6 tests)
 ```
 

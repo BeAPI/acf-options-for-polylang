@@ -35,8 +35,8 @@
 * Removed custom PHP version check and compat.php; PHP requirement is now enforced by WordPress Requires PHP header (WP 5.2+)
 
 ### 📊 Testing & Quality
-* 61 unit tests, 92 assertions, 0 skips covering all main classes:
-  - 25 tests for Main class (filters, language switching, default values, untranslated context, switch/restore)
+* 63 unit tests, 94 assertions, 0 skips covering all main classes:
+  - 27 tests for Main class (filters, language switching, default values, untranslated context, switch/restore)
   - 19 tests for Helpers class (option IDs, localization detection, lang attribute, regex fragment)
   - 8 tests for Admin class (submitbox output, hooks, language display)
   - 6 tests for Requirements class (dependency checks, error display)
@@ -50,6 +50,7 @@
 * All code complies with WordPress Coding Standards
 
 ### 🐛 Bug Fixes
+* Fixed the "All languages" fallback being skipped when ACF had already replaced a missing per-language value by the field `default_value` (e.g. a true_false field with default 0 read as off in every language although enabled globally). The fallback now checks whether a value is stored for the language instead of testing the loaded value
 * Fixed coding standards violations (use __DIR__ instead of dirname(__FILE__))
 * Converted array() syntax to short [] syntax throughout codebase
 

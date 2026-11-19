@@ -163,6 +163,15 @@ class Main {
 		}
 
 		/**
+		 * ACF replaces a missing value by the field `default_value` before `acf/load_value`,
+		 * so a true_false field with `default_value` 0 reached this filter as 0 and never fell back.
+		 * When nothing is stored for the localized post id, use the "All languages" value whatever $value is.
+		 *
+		 * @since 2.0.0
+		 */
+		$has_localized_value = $post_id === $original_post_id || $this->has_stored_value( $post_id, $field );
+
+		/**
 		 * According to his type, check the value to be not an empty string.
 		 * While false or 0 could be returned, so "empty" method could not be here useful.
 		 *
@@ -170,7 +179,7 @@ class Main {
 		 *
 		 * @since 1.0.1
 		 */
-		if ( ! is_null( $value ) ) {
+		if ( $has_localized_value && ! is_null( $value ) ) {
 			if ( is_array( $value ) ) {
 				// Get from array all the not empty strings
 				$is_empty = array_filter(
@@ -207,6 +216,35 @@ class Main {
 		add_filter( 'acf/load_value', [ $this, 'get_default_value' ], 10, 3 );
 
 		return $value;
+	}
+
+	/**
+	 * Whether a value is stored in database for the given post id and field.
+	 *
+	 * Reads the raw metadata, before ACF applies the field `default_value`.
+	 *
+	 * @param string|int $post_id ACF post id, e.g. `options_fr_FR`.
+	 * @param array      $field   ACF field array.
+	 *
+	 * @return bool
+	 * @since 2.0.0
+	 */
+	private function has_stored_value( $post_id, $field ): bool {
+		if ( empty( $field['name'] ) ) {
+			return true;
+		}
+
+		// ACF 6.4+.
+		if ( function_exists( 'acf_get_metadata_by_field' ) ) {
+			return null !== acf_get_metadata_by_field( $post_id, $field );
+		}
+
+		if ( function_exists( 'acf_get_metadata' ) ) {
+			return null !== acf_get_metadata( $post_id, $field['name'] );
+		}
+
+		// Unknown ACF API: keep the historical behaviour.
+		return true;
 	}
 
 	/**
